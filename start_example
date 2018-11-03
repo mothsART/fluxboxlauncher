@@ -1,0 +1,5 @@
+exec gnome-calculator &
+exec evince &
+exec libreoffice --writer &
+exec poeditor &
+exec system-config-printer &
