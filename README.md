@@ -8,5 +8,5 @@ python-toml
 ## launch
 
 ```sh
-    python ./fluxboxlauncher.py USERNAME
+python ./fluxboxlauncher.py USERNAME
 ```

@@ -1,8 +1,11 @@
+#!/usr/bin/python
+# -*- coding:Utf-8 -*- 
+
 import os
 import sys
-import pygtk
-pygtk.require('2.0')
-import gtk
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk, Gdk
 import gettext
 import locale
 import toml
@@ -88,16 +91,40 @@ class Soft:
         return dic
 
 
-class FluxBoxLauncher:
+class ConfirmDialog(Gtk.Dialog):
+
+    def __init__(self, parent, title, message):
+        Gtk.Dialog.__init__(
+            self, title, parent, 0,
+            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+            Gtk.STOCK_OK, Gtk.ResponseType.OK)
+        )
+
+        self.set_default_size(150, 100)
+        box = self.get_content_area()
+        if message:
+            label = Gtk.Label(message)
+            box.add(label)
+        self.show_all()
+
+
+class FluxBoxLauncherWindow(Gtk.Window):
     ICONSIZE = 32
     softs    = []
 
-    def close_application(self, widget, event):
-        gtk.main_quit()
-
     def del_soft(self, conf, soft, hbox, vbox):
-        print(conf, soft, hbox, vbox)
-        
+        # Confirmation de la suppression
+        # Désirez-vous réellement supprimer cette application du lancement de Fluxbox
+        confirm = ConfirmDialog(
+            self,
+            "Confirmation of deletion",
+            "Do you really want to delete this app from Fluxbox launch"
+        )
+        response = confirm.run()
+        if not response == Gtk.ResponseType.OK:
+            confirm.destroy()
+            return
+        confirm.destroy()
         self.softs.remove(soft)
         new_toml = {}
         inc = 0
@@ -116,11 +143,11 @@ class FluxBoxLauncher:
         vbox.remove(hbox)
 
     def _add_soft(self, conf, soft, vbox):
-        hbox = gtk.HBox(homogeneous=False)
+        hbox = Gtk.HBox(homogeneous=False)
 
-        delbtn = gtk.Button()
-        deli = gtk.Image()
-        deli.set_from_stock(gtk.STOCK_DELETE, gtk.ICON_SIZE_MENU)
+        delbtn = Gtk.Button()
+        deli = Gtk.Image()
+        deli.set_from_stock(Gtk.STOCK_DELETE, Gtk.IconSize.MENU)
         delbtn.set_image(deli)
         delbtn.connect_object(
             "clicked",
@@ -131,30 +158,30 @@ class FluxBoxLauncher:
             vbox
         )
 
-        img = gtk.Image()
+        img = Gtk.Image()
         if (
             os.path.isfile(soft.icon)
             and (icon.endswith('.png') or icon.endswith('.jpg'))
         ):
-            pixbuf = gtk.gdk.pixbuf_new_from_file_at_size(
+            pixbuf = Gtk.gdk.pixbuf_new_from_file_at_size(
                 soft.icon,
                 self.ICONSIZE, self.ICONSIZE
             )
             scaled_buf = pixbuf.scale_simple(
                 self.ICONSIZE, self.ICONSIZE,
-                gtk.gdk.INTERP_BILINEAR
+                Gtk.gdk.INTERP_BILINEAR
             )
             img.set_from_pixbuf(scaled_buf)
         else:
             img.set_from_icon_name(soft.icon, self.ICONSIZE)
             img.set_pixel_size(self.ICONSIZE)
         
-        label = gtk.Label(soft.name)
+        label = Gtk.Label(soft.name)
 
-        hbox.pack_start(delbtn, True,  True)
-        hbox.pack_start(img,    True,  True)
-        hbox.pack_start(label,  True,  True)
-        vbox.pack_end(hbox,     False, True)
+        hbox.pack_start(delbtn, True,  True, False)
+        hbox.pack_start(img,    True,  True, False)
+        hbox.pack_start(label,  True,  True, False)
+        vbox.pack_end(hbox,     False, True, False)
         
         self.softs.append(soft)
 
@@ -163,7 +190,7 @@ class FluxBoxLauncher:
         selection, target_type, timestamp,
         conf, vbox
     ):
-        data = selection.data.strip().replace('%20', ' ')
+        data = selection.get_data().strip().replace('%20', ' ')
         f = data.replace("file://", "").strip()
         if os.path.isfile(f):
             soft = Soft()
@@ -221,36 +248,38 @@ class FluxBoxLauncher:
     def __init__(self, conf):
         if conf.DEBUG:
             print('DEBUG MODE')
-        self.window = gtk.Window(gtk.WINDOW_TOPLEVEL)
-        self.window.connect("delete_event", self.close_application)
-        self.window.set_title("Fluxbox Launcher")
-        self.window.set_border_width(0)
+        Gtk.Window.__init__(self, title="Fluxbox Launcher")
+        self.set_border_width(0)
 
-        vbox = gtk.VBox(homogeneous=False)
+        vbox = Gtk.VBox(homogeneous=False)
         
         TARGET_TYPE_URI_LIST = 80
-        dnd_list = [ ( 'text/uri-list', 0, TARGET_TYPE_URI_LIST ) ]
-        h = gtk.HBox(homogeneous=False)
+        dnd_list = [ 
+            Gtk.TargetEntry.new(
+                'text/uri-list', 0, TARGET_TYPE_URI_LIST 
+            )
+        ]
+        h = Gtk.HBox(homogeneous=False)
         h.drag_dest_set(
-            gtk.DEST_DEFAULT_MOTION |
-            gtk.DEST_DEFAULT_HIGHLIGHT | gtk.DEST_DEFAULT_DROP,
-            dnd_list, gtk.gdk.ACTION_COPY
+            Gtk.DestDefaults.ALL,
+            dnd_list, 
+            Gdk.DragAction.COPY
         )
         h.connect(
-            "drag_data_received",
+            "drag-data-received",
             self.on_drag_data_received,
             conf, vbox
         )
-        l = gtk.Label("Drag an icon here to create a launcher")
-        drag_vbox = gtk.VBox(homogeneous=False)
-        appfinderbtn = gtk.Button(label="Search for applications")
+        l = Gtk.Label("Drag an icon here to create a launcher")
+        drag_vbox = Gtk.VBox(homogeneous=False)
+        appfinderbtn = Gtk.Button(label="Search for applications")
         appfinderbtn.connect("button_press_event", self.appfinder)
         drag_vbox.pack_start(appfinderbtn, False, False, 10)
         drag_vbox.pack_start(l, True, True, 10)
         appfinderbtn.show()
         l.show()
-        h.pack_start(drag_vbox, True, True)
-        vbox.pack_start(h, True, True)
+        h.pack_start(drag_vbox, True, True, False)
+        vbox.pack_start(h, True, True, False)
 
         start_stream, new_toml = self.load(conf, vbox)
         with open(conf.start_path,'w') as f:
@@ -258,16 +287,18 @@ class FluxBoxLauncher:
         with open(conf.toml_path,'w') as f:
             f.write(toml.dumps(new_toml))
 
-        swin = gtk.ScrolledWindow()
+        swin = Gtk.ScrolledWindow()
         swin.add_with_viewport(vbox)
-        self.window.add(swin)
-        self.window.set_default_size(400, 600)
-        self.window.show_all()
+        self.add(swin)
+        self.set_default_size(400, 600)
+        self.show_all()
 
 if __name__ == "__main__":
     user = None
     if len(sys.argv) > 1:
         user = sys.argv[1]
-    FluxBoxLauncher(Conf(user))
-    gtk.main()
+    win = FluxBoxLauncherWindow(Conf(user))
+    win.connect("destroy", Gtk.main_quit)
+    win.show_all()
+    Gtk.main()
     exit(0)
