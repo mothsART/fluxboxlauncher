@@ -2,6 +2,7 @@
 # -*- coding:Utf-8 -*- 
 
 import os
+from os.path import dirname, join
 import sys
 import gi
 gi.require_version('Gtk', '3.0')
@@ -9,6 +10,12 @@ from gi.repository import Gtk, Gdk
 import gettext
 import locale
 import toml
+
+local_path = join(dirname(dirname(__file__)),  'locale')
+gettext.bindtextdomain('fluxboxlauncher', local_path)
+gettext.textdomain('fluxboxlauncher')
+_ = gettext.gettext
+
 
 def get_info_desktop(desktopfile):
     """return infos from a .desktop file"""
@@ -135,12 +142,10 @@ class FluxBoxLauncherWindow(Gtk.Window):
     softs    = []
 
     def del_soft(self, conf, soft, hbox, vbox):
-        # Confirmation de la suppression
-        # Désirez-vous réellement supprimer cette application du lancement de Fluxbox
         confirm = ConfirmDialog(
             self,
-            "Confirmation of deletion",
-            "Do you really want to delete this app from Fluxbox launch"
+            _('Confirmation of deletion'),
+            _('Do you really want to delete this app from Fluxbox launch ?')
         )
         response = confirm.run()
         if not response == Gtk.ResponseType.OK:
@@ -241,7 +246,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
             try:
                 parsed_toml = toml.loads(d.read())
             except:
-                print('start.toml is not a proper TOML file.')
+                print(_('%s is not a proper TOML file.' % parsed_toml))
                 return start_stream, new_toml
         if len(parsed_toml) == 0:
             return start_stream, new_toml
@@ -271,7 +276,10 @@ class FluxBoxLauncherWindow(Gtk.Window):
     def __init__(self, conf):
         if conf.DEBUG:
             print('DEBUG MODE')
-        Gtk.Window.__init__(self, title="Fluxbox Launcher")
+        Gtk.Window.__init__(
+            self,
+            title = 'Fluxbox Launcher'
+        )
         self.set_border_width(0)
 
         vbox = Gtk.VBox(homogeneous=False)
@@ -293,9 +301,11 @@ class FluxBoxLauncherWindow(Gtk.Window):
             self.on_drag_data_received,
             conf, vbox
         )
-        l = Gtk.Label("Drag an icon here to create a launcher")
+        l = Gtk.Label(_("Drag an icon here to create a launcher"))
         drag_vbox = Gtk.VBox(homogeneous=False)
-        appfinderbtn = Gtk.Button(label="Search for applications")
+        appfinderbtn = Gtk.Button(
+            label = _("Search for applications")
+        )
         appfinderbtn.connect("button_press_event", self.appfinder)
         drag_vbox.pack_start(appfinderbtn, False, False, 10)
         drag_vbox.pack_start(l, True, True, 10)
