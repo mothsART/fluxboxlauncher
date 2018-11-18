@@ -1,26 +1,21 @@
 [soft-1]
-cmd = "gnome-calculator"
-name = "Calculator"
-icon = "accessories-calculator"
-
-[soft-3]
 generic = "Traitement de texte"
 cmd = "libreoffice --writer"
 name = "Nouveau document"
 icon = "libreoffice-writer"
 
-[soft-2]
-cmd = "evince"
-name = "Document Viewer"
-icon = "evince"
-
-[soft-5]
+[soft-3]
 cmd = "system-config-printer"
 name = "Printers"
 icon = "printer"
 
-[soft-4]
+[soft-2]
 generic = "Outil de traduction"
 cmd = "poeditor"
 name = "Poedit"
 icon = "poedit"
+
+[soft-4]
+cmd = "evince"
+name = "Document Viewer"
+icon = "evince"

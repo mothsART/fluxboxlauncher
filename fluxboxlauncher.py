@@ -47,18 +47,40 @@ def get_info_desktop(desktopfile):
     return name, cmd, icon, generic
 
 
+def update_startup_file(start_path, start_stream):
+    with open(start_path, 'r') as f:
+       lines = f.readlines()
+    first_lines = []
+    final_lines = []
+    after_fluxbox = False
+    for line in lines:
+        if after_fluxbox or line.startswith('exec fluxbox'):
+            final_lines.append(line)
+            after_fluxbox = True
+            continue
+        if line.startswith('exec '):
+            continue
+        if line.startswith('# exec '):
+            continue
+        first_lines.append(line)
+    with open(start_path, 'w') as f:
+        f.write(''.join(
+            first_lines[:-1] + start_stream + ['\n'] + final_lines)
+        )
+
+
 class Conf:
     def __init__(self, user):
         self.DEBUG = False
         self.toml_path = 'start.toml'
-        self.start_path = 'start_example'
+        self.start_path = 'startup'
         if os.path.isdir('.git'):
             self.DEBUG = True
         dirname = "/home/%s/.fluxbox/" % user
         if not os.path.isdir(dirname):
             return
         self.toml_path  = dirname + 'start.toml'
-        self.start_path = dirname + 'start'
+        self.start_path = dirname + 'startup'
 
 
 class Soft:
@@ -128,18 +150,17 @@ class FluxBoxLauncherWindow(Gtk.Window):
         self.softs.remove(soft)
         new_toml = {}
         inc = 0
-        start_stream = ''
+        start_stream = []
         for s in self.softs:
             inc = inc + 1
-            start_stream += 'exec %s &\n' % s.cmd
+            start_stream.append('exec %s &\n' % s.cmd)
             new_toml = dict(
                 new_toml, 
                 **s.to_dict(inc)
             )
+        update_startup_file(conf.start_path, start_stream)
         with open(conf.toml_path,'w') as f:
             f.write(toml.dumps(new_toml))
-        with open(conf.start_path,'w') as f:
-            f.write(start_stream)
         vbox.remove(hbox)
 
     def _add_soft(self, conf, soft, vbox):
@@ -197,19 +218,21 @@ class FluxBoxLauncherWindow(Gtk.Window):
             soft.new(*get_info_desktop(f))
             self._add_soft(conf, soft, vbox)
             vbox.show_all()
+            start_stream = []
+            for s in self.softs:
+                start_stream.append('exec %s &\n' % s.cmd)
+            update_startup_file(conf.start_path, start_stream)
             with open(conf.toml_path, 'a+') as f:
                 f.write(
                     ' \n'
                     + toml.dumps(soft.to_dict(len(self.softs)))
                 )
-            with open(conf.start_path,'a+') as f:
-                f.write('exec %s &\n' % soft.cmd)
 
     def appfinder(self, widget=None, event=None):
         os.system('rox /usr/share/applications &')
 
     def load(self, conf, vbox):
-        start_stream  = ''
+        start_stream  = []
         self.cmd_list = []
         new_toml      = {}
         if not os.path.isfile(conf.toml_path):
@@ -238,7 +261,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
             if 'generic' in soft_conf:
                 soft.generic = soft_conf['generic']
             self._add_soft(conf, soft, vbox)
-            start_stream += 'exec %s &\n' % soft.cmd
+            start_stream.append('exec %s &\n' % soft.cmd)
             new_toml = dict(
                 new_toml, 
                 **soft.to_dict(len(self.softs))
@@ -282,8 +305,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
         vbox.pack_start(h, True, True, False)
 
         start_stream, new_toml = self.load(conf, vbox)
-        with open(conf.start_path,'w') as f:
-            f.write(start_stream)
+        update_startup_file(conf.start_path, start_stream)
         with open(conf.toml_path,'w') as f:
             f.write(toml.dumps(new_toml))
 
