@@ -12,6 +12,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - i18n
 - replace startup file with new config
 - alert dialog on duplicates
-
-
-
+- checkbox for enable/disable application

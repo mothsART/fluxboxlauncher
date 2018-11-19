@@ -15,7 +15,12 @@ cmd = "poeditor"
 name = "Poedit"
 icon = "poedit"
 
-[soft-4]
+[soft-5]
 cmd = "evince"
 name = "Document Viewer"
 icon = "evince"
+
+[soft-4]
+cmd = "xsane"
+name = "XSane Image scanning program"
+icon = "scanner"

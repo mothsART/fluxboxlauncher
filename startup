@@ -29,6 +29,7 @@ fi
 exec libreoffice --writer &
 exec poeditor &
 exec system-config-printer &
+exec xsane &
 exec evince &
 
 exec fluxbox

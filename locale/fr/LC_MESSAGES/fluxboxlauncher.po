@@ -17,21 +17,29 @@ msgstr ""
 
 #: ./fluxboxlauncher.py:142
 msgid "Confirmation of deletion"
-msgstr "Confirmation de la suppression"
+msgstr "Confirmation de suppression"
 
 #: ./fluxboxlauncher.py:143
 msgid "Do you really want to delete this app from Fluxbox launch ?"
 msgstr "Désirez-vous réellement supprimer cette application du lancement de Fluxbox ?"
 
+#: ./fluxboxlauncher.py:245
+msgid "Duplicate"
+msgstr "Doublon"
+
+#: ./fluxboxlauncher.py:246
+msgid "This application already exists"
+msgstr "Cette application existe déjà"
+
 #: ./fluxboxlauncher.py:244
-msgid "%s is not a proper TOML file."
-msgstr "%s n'est pas un fichier TOML valide."
+msgid "{0} is not a proper TOML file."
+msgstr "{0} n'est pas un fichier TOML valide."
 
 #: ./fluxboxlauncher.py:299
-msgid "Drag an icon here to create a launcher"
-msgstr "Glissez ici une appication"
+msgid "Drag an application here to create a launcher"
+msgstr "Glissez ici une application"
 
 #: ./fluxboxlauncher.py:302
-msgid "Search for applications"
-msgstr "Recherche d'applications"
+msgid "Search an application"
+msgstr "Recherchez une application"
 

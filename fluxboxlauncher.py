@@ -137,6 +137,22 @@ class ConfirmDialog(Gtk.Dialog):
         self.show_all()
 
 
+class WarningDialog(Gtk.Dialog):
+
+    def __init__(self, parent, title, message):
+        Gtk.Dialog.__init__(
+            self, title, parent, 0,
+            (Gtk.STOCK_OK, Gtk.ResponseType.CANCEL)
+        )
+
+        self.set_default_size(100, 50)
+        box = self.get_content_area()
+        if message:
+            label = Gtk.Label(message)
+            box.add(label)
+        self.show_all()
+
+
 class FluxBoxLauncherWindow(Gtk.Window):
     ICONSIZE = 32
     softs    = []
@@ -216,11 +232,22 @@ class FluxBoxLauncherWindow(Gtk.Window):
         selection, target_type, timestamp,
         conf, vbox
     ):
+
         data = selection.get_data().strip().replace('%20', ' ')
         f = data.replace("file://", "").strip()
         if os.path.isfile(f):
             soft = Soft()
             soft.new(*get_info_desktop(f))
+            for s in self.softs:
+                if soft.cmd == s.cmd:
+                    confirm = WarningDialog(
+                        self,
+                        _('Duplicate'),
+                        _('This application already exists')
+                    )
+                    confirm.run()
+                    confirm.destroy()
+                    return
             self._add_soft(conf, soft, vbox)
             vbox.show_all()
             start_stream = []
@@ -246,7 +273,11 @@ class FluxBoxLauncherWindow(Gtk.Window):
             try:
                 parsed_toml = toml.loads(d.read())
             except:
-                print(_('%s is not a proper TOML file.' % parsed_toml))
+                print(
+                    _(
+                        '{0} is not a proper TOML file.'
+                    ).format(conf.toml_path)
+                )
                 return start_stream, new_toml
         if len(parsed_toml) == 0:
             return start_stream, new_toml
@@ -301,10 +332,12 @@ class FluxBoxLauncherWindow(Gtk.Window):
             self.on_drag_data_received,
             conf, vbox
         )
-        l = Gtk.Label(_("Drag an icon here to create a launcher"))
+        l = Gtk.Label(_(
+            "Drag an application here to create a launcher"
+        ))
         drag_vbox = Gtk.VBox(homogeneous=False)
         appfinderbtn = Gtk.Button(
-            label = _("Search for applications")
+            label = _("Search an application")
         )
         appfinderbtn.connect("button_press_event", self.appfinder)
         drag_vbox.pack_start(appfinderbtn, False, False, 10)
