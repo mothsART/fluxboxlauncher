@@ -26,10 +26,10 @@ fi
 # And last but not least we start fluxbox.
 # Because it is the last app you have to run it with ''exec'' before it.
 
-exec libreoffice --writer &
+# exec libreoffice --writer &
 exec poeditor &
 exec system-config-printer &
-exec xsane &
+# exec xsane &
 exec evince &
 
 exec fluxbox

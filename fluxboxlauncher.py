@@ -91,10 +91,11 @@ class Conf:
 
 
 class Soft:
-    name    = None
-    cmd     = None
-    icon    = None
-    generic = None
+    name     = None
+    cmd      = None
+    icon     = None
+    generic  = None
+    disabled = False
 
     def __init__(self):
         pass
@@ -114,9 +115,11 @@ class Soft:
             }
         }
         if self.icon:
-            dic[soft_title]['icon'] = self.icon
+            dic[soft_title]['icon']     = self.icon
         if self.generic:
-            dic[soft_title]['generic'] = self.generic
+            dic[soft_title]['generic']  = self.generic
+        if self.disabled:
+            dic[soft_title]['disabled'] = self.disabled
         return dic
 
 
@@ -174,7 +177,32 @@ class FluxBoxLauncherWindow(Gtk.Window):
         start_stream = []
         for s in self.softs:
             inc = inc + 1
-            start_stream.append('exec %s &\n' % s.cmd)
+            if s.disabled:
+                start_stream.append('# exec %s &\n' % s.cmd)
+            else:
+                start_stream.append('exec %s &\n' % s.cmd)
+            new_toml = dict(
+                new_toml,
+                **s.to_dict(inc)
+            )
+        update_startup_file(conf.start_path, start_stream)
+        with open(conf.toml_path,'w') as f:
+            f.write(toml.dumps(new_toml))
+        vbox.remove(hbox)
+
+    def on_switch_activated(self, switch, gparam, soft, conf):
+        soft.disabled = False
+        if switch.get_active():
+            soft.disabled = True
+        start_stream = []
+        inc          = 0
+        new_toml     = {}
+        for s in self.softs:
+            inc = inc + 1
+            if s.disabled:
+                start_stream.append('# exec %s &\n' % s.cmd)
+            else:
+                start_stream.append('exec %s &\n' % s.cmd)
             new_toml = dict(
                 new_toml, 
                 **s.to_dict(inc)
@@ -182,7 +210,6 @@ class FluxBoxLauncherWindow(Gtk.Window):
         update_startup_file(conf.start_path, start_stream)
         with open(conf.toml_path,'w') as f:
             f.write(toml.dumps(new_toml))
-        vbox.remove(hbox)
 
     def _add_soft(self, conf, soft, vbox):
         hbox = Gtk.HBox(homogeneous=False)
@@ -217,14 +244,24 @@ class FluxBoxLauncherWindow(Gtk.Window):
         else:
             img.set_from_icon_name(soft.icon, self.ICONSIZE)
             img.set_pixel_size(self.ICONSIZE)
-        
+
         label = Gtk.Label(soft.name)
+        switch = Gtk.Switch()
+        switch.set_active(soft.disabled)
+        switch.connect(
+            "notify::active",
+            self.on_switch_activated,
+            soft,
+            conf
+        )
 
         hbox.pack_start(delbtn, True,  True, False)
         hbox.pack_start(img,    True,  True, False)
         hbox.pack_start(label,  True,  True, False)
-        vbox.pack_end(hbox,     False, True, False)
+        hbox.pack_start(switch, True,  True, False)
         
+        vbox.pack_end(hbox,     False, True, False)
+
         self.softs.append(soft)
 
     def on_drag_data_received(
@@ -252,6 +289,9 @@ class FluxBoxLauncherWindow(Gtk.Window):
             vbox.show_all()
             start_stream = []
             for s in self.softs:
+                if s.disabled:
+                    start_stream.append('# exec %s &\n' % s.cmd)
+                    continue
                 start_stream.append('exec %s &\n' % s.cmd)
             update_startup_file(conf.start_path, start_stream)
             with open(conf.toml_path, 'a+') as f:
@@ -296,8 +336,13 @@ class FluxBoxLauncherWindow(Gtk.Window):
                 soft.icon = soft_conf['icon']
             if 'generic' in soft_conf:
                 soft.generic = soft_conf['generic']
+            if 'disabled' in soft_conf:
+                soft.disabled = soft_conf['disabled']
             self._add_soft(conf, soft, vbox)
-            start_stream.append('exec %s &\n' % soft.cmd)
+            if soft.disabled:
+                start_stream.append('# exec %s &\n' % soft.cmd)
+            else:
+                start_stream.append('exec %s &\n' % soft.cmd)
             new_toml = dict(
                 new_toml, 
                 **soft.to_dict(len(self.softs))
@@ -355,7 +400,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
         swin = Gtk.ScrolledWindow()
         swin.add_with_viewport(vbox)
         self.add(swin)
-        self.set_default_size(400, 600)
+        self.set_default_size(500, 600)
         self.show_all()
 
 if __name__ == "__main__":

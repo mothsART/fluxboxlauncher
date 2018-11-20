@@ -1,5 +1,6 @@
 [soft-1]
 generic = "Traitement de texte"
+disabled = true
 cmd = "libreoffice --writer"
 name = "Nouveau document"
 icon = "libreoffice-writer"
@@ -21,6 +22,7 @@ name = "Document Viewer"
 icon = "evince"
 
 [soft-4]
+disabled = true
 cmd = "xsane"
 name = "XSane Image scanning program"
 icon = "scanner"
