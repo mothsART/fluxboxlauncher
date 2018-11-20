@@ -255,12 +255,12 @@ class FluxBoxLauncherWindow(Gtk.Window):
             conf
         )
 
-        hbox.pack_start(delbtn, True,  True, False)
-        hbox.pack_start(img,    True,  True, False)
-        hbox.pack_start(label,  True,  True, False)
-        hbox.pack_start(switch, True,  True, False)
-        
-        vbox.pack_end(hbox,     False, True, False)
+        hbox.pack_start(delbtn, False, False, False)
+        hbox.pack_start(img,    False, False, False)
+        hbox.pack_start(label,  True,  False, False)
+        hbox.pack_start(switch, False, False, False)
+
+        vbox.pack_end(hbox,     False, False, False)
 
         self.softs.append(soft)
 
