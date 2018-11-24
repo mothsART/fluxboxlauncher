@@ -28,5 +28,7 @@ msgfmt -o locale/{lang}/LC_MESSAGES/fluxboxlauncher.mo locale/{lang}/LC_MESSAGES
 ## Create a Debian package
 
 ```sh
+git clone https://github.com/mothsART/fluxboxlauncher.git
+cd fluxboxlauncher
 dpkg-buildpackage -us -uc
 ```
