@@ -1,0 +1,13 @@
+Source: fluxboxlauncher
+Section: education
+Version: 0.1
+Priority: extra
+Maintainer: Ferry Jérémie <ferryjeremie@free.fr>
+Build-Depends: debhelper (>= 9)
+
+Package: fluxboxlauncher
+Version: 0.1
+Architecture: all
+Maintainer: Ferry Jérémie <ferryjeremie@free.fr>
+Depends: python, python-gtk2, python-toml, rox-filer, ${misc:Depends}
+Description: Gérer les applications au lancement de FluxBox

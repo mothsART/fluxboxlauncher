@@ -1,0 +1,9 @@
+fluxboxlauncher                           usr/bin
+
+fluxboxlauncher.py                        usr/share/fluxboxlauncher
+
+logo.png                                  usr/share/applications/fluxboxlauncher
+
+locale/fr/LC_MESSAGES/fluxboxlauncher.mo  usr/share/locale/fr/LC_MESSAGES
+
+debian/fluxboxlauncher.desktop            usr/share/applications

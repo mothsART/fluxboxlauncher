@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Name=FluxboxLauncher
+Comment=manage starting application on Fluxbox
+Exec=fluxboxlauncher
+Icon=/usr/share/applications/fluxboxlauncher/logo.png
+Terminal=false
+Type=Application
+Categories=Misc;
+Keywords=fluxbox;
+Name[fr_FR]=FluxboxLauncher

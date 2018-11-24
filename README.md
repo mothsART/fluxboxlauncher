@@ -24,3 +24,9 @@ Compile po file to mo :
 ```sh
 msgfmt -o locale/{lang}/LC_MESSAGES/fluxboxlauncher.mo locale/{lang}/LC_MESSAGES/fluxboxlauncher.po
 ```
+
+## Create a Debian package
+
+```sh
+dpkg-buildpackage -us -uc
+```
