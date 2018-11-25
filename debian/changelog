@@ -1,4 +1,5 @@
-fluxboxlauncher (0.1) stretch; urgency=medium
-  * first version
+fluxboxlauncher (0.1) bionic; urgency=medium
 
- -- jferry <jerem.ferry@gmail.com>  Wed, 21 Nov 2018 23:50:10 +0100
+  * Initial release
+
+ -- Jérémie Ferry <jerem.ferry@gmail.com> Wed, 21 Nov 2018 23:50:10 +0100
