@@ -70,10 +70,18 @@ def update_startup_file(start_path, start_stream):
         if line.startswith('# exec '):
             continue
         first_lines.append(line)
-    with open(start_path, 'w') as f:
-        f.write(''.join(
-            first_lines[:-1] + start_stream + ['\n'] + final_lines)
+    with open(conf.start_path, 'w') as f:
+        f.write(
+            ''.join(first_lines)
+            + ''.join(start_stream)
+            + ''.join(final_lines)
         )
+
+def contains(toml_stream, cmd):
+    for soft in toml_stream:
+        if toml_stream[soft]['cmd'].strip() == cmd:
+            return True
+    return False
 
 
 class Conf:
@@ -229,7 +237,8 @@ class FluxBoxLauncherWindow(Gtk.Window):
 
         img = Gtk.Image()
         if (
-            os.path.isfile(soft.icon)
+            soft.icon != None
+            and os.path.isfile(soft.icon)
             and (icon.endswith('.png') or icon.endswith('.jpg'))
         ):
             pixbuf = Gtk.gdk.pixbuf_new_from_file_at_size(
@@ -241,7 +250,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
                 Gtk.gdk.INTERP_BILINEAR
             )
             img.set_from_pixbuf(scaled_buf)
-        else:
+        elif soft.icon != None:
             img.set_from_icon_name(soft.icon, self.ICONSIZE)
             img.set_pixel_size(self.ICONSIZE)
 
@@ -272,33 +281,34 @@ class FluxBoxLauncherWindow(Gtk.Window):
 
         data = selection.get_data().strip().replace('%20', ' ')
         f = data.replace("file://", "").strip()
-        if os.path.isfile(f):
-            soft = Soft()
-            soft.new(*get_info_desktop(f))
-            for s in self.softs:
-                if soft.cmd == s.cmd:
-                    confirm = WarningDialog(
-                        self,
-                        _('Duplicate'),
-                        _('This application already exists')
-                    )
-                    confirm.run()
-                    confirm.destroy()
-                    return
-            self._add_soft(conf, soft, vbox)
-            vbox.show_all()
-            start_stream = []
-            for s in self.softs:
-                if s.disabled:
-                    start_stream.append('# exec %s &\n' % s.cmd)
-                    continue
-                start_stream.append('exec %s &\n' % s.cmd)
-            update_startup_file(conf.start_path, start_stream)
-            with open(conf.toml_path, 'a+') as f:
-                f.write(
-                    ' \n'
-                    + toml.dumps(soft.to_dict(len(self.softs)))
+        if not os.path.isfile(f):
+            return
+        soft = Soft()
+        soft.new(*get_info_desktop(f))
+        for s in self.softs:
+            if soft.cmd == s.cmd:
+                confirm = WarningDialog(
+                    self,
+                    _('Duplicate'),
+                    _('This application already exists')
                 )
+                confirm.run()
+                confirm.destroy()
+                return
+        self._add_soft(conf, soft, vbox)
+        vbox.show_all()
+        start_stream = []
+        for s in self.softs:
+            if s.disabled:
+                start_stream.append('# exec %s &\n' % s.cmd)
+                continue
+            start_stream.append('exec %s &\n' % s.cmd)
+        update_startup_file(conf.start_path, start_stream)
+        with open(conf.toml_path, 'a+') as f:
+            f.write(
+                ' \n'
+                + toml.dumps(soft.to_dict(len(self.softs)))
+            )
 
     def appfinder(self, widget=None, event=None):
         os.system('rox /usr/share/applications &')
@@ -309,7 +319,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
         new_toml      = {}
         if not os.path.isfile(conf.toml_path):
             return start_stream, new_toml
-        with open(conf.toml_path,'r') as d:
+        with open(conf.toml_path, 'r') as d:
             try:
                 parsed_toml = toml.loads(d.read())
             except:
@@ -321,7 +331,9 @@ class FluxBoxLauncherWindow(Gtk.Window):
                 return start_stream, new_toml
         if len(parsed_toml) == 0:
             return start_stream, new_toml
-        for soft_index in parsed_toml:
+        def sort_softs(soft):
+            return int(soft.replace('soft-', ''))
+        for soft_index in sorted(parsed_toml, key=sort_softs):
             soft_conf = parsed_toml[soft_index]
             if 'cmd' not in soft_conf:
                 continue
@@ -393,15 +405,55 @@ class FluxBoxLauncherWindow(Gtk.Window):
         vbox.pack_start(h, True, True, False)
 
         start_stream, new_toml = self.load(conf, vbox)
-        update_startup_file(conf.start_path, start_stream)
+        with open(conf.start_path, 'r') as f:
+            lines = f.readlines()
+            first_lines = []
+            final_lines = []
+            after_fluxbox = False
+            for line in lines:
+                if after_fluxbox or line.startswith('exec fluxbox'):
+                    final_lines.append(line)
+                    after_fluxbox = True
+                    continue
+                if line.startswith('exec '):
+                    cmd = line.replace('exec ', '').replace(' &', '').strip()
+                    if contains(new_toml, cmd):
+                        continue
+                    new_toml['soft-%s' % str(len(new_toml) + 1)] = {
+                        'cmd': cmd,
+                        'name': cmd
+                    }
+                    first_lines.append('exec %s &\n' % cmd)
+                    continue
+                if line.startswith('# exec '):
+                    cmd = line.replace('#', '').replace('exec ', '').replace('&', '').strip()
+                    if contains(new_toml, cmd):
+                        continue
+                    new_toml['soft-%s' % str(len(new_toml) + 1)] = {
+                        'cmd': cmd,
+                        'name': cmd,
+                        'disabled': True
+                    }
+                    first_lines.append('# exec %s &\n' % cmd)
+                    continue
+                first_lines.append(line)
+        with open(conf.start_path, 'w') as f:
+            f.write(
+                ''.join(first_lines)
+                + ''.join(start_stream)
+                + ''.join(final_lines)
+            )
         with open(conf.toml_path,'w') as f:
             f.write(toml.dumps(new_toml))
+        if start_stream == []:
+            self.load(conf, vbox)
 
         swin = Gtk.ScrolledWindow()
         swin.add_with_viewport(vbox)
         self.add(swin)
         self.set_default_size(500, 600)
         self.show_all()
+
 
 if __name__ == "__main__":
     user = None
