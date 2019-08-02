@@ -11,157 +11,15 @@ import gettext
 import locale
 import toml
 
-local_path = join(dirname(dirname(__file__)),  'locale')
+from lib.desktop import get_info
+from lib.dialog import ConfirmDialog, WarningDialog
+from lib.config import Conf
+from lib.soft import Soft
+
+local_path = join(dirname(dirname(__file__)), 'locale')
 gettext.bindtextdomain('fluxboxlauncher', local_path)
 gettext.textdomain('fluxboxlauncher')
 _ = gettext.gettext
-
-
-def get_info_desktop(desktopfile):
-    """return infos from a .desktop file"""
-    name, cmd, icon, generic= "", "", "", ""
-    nameloc = False
-    geneloc = False
-    lang = locale.setlocale(locale.LC_ALL, "")[0:2]
-    with open(desktopfile,'r') as d:
-        df = d.readlines()
-    for l in df:
-        if generic == "" or geneloc == False:
-            if l.startswith('GenericName[{0}]='.format(lang)):
-                generic = l.replace(
-                    'GenericName[{0}]='.format(lang),''
-                ).strip()
-                geneloc = True
-            elif l.startswith('GenericName='.format(lang)):
-                generic = l.replace(
-                    'GenericName='.format(lang),''
-                ).strip()
-        if name == "" or nameloc == False:
-            if l.startswith('Name[{0}]='.format(lang)):
-                name = l.replace(
-                    'Name[{0}]='.format(lang),''
-                ).strip()
-                nameloc = True
-            elif l.startswith('Name='):
-                name = l.replace('Name=', '').strip()
-        if cmd == "" and l.startswith('Exec='):
-            cmd = l.replace('Exec=', '').strip()
-            cmd = cmd.split('%')[0].strip()
-        if icon == "" and l.startswith('Icon='):
-            icon = os.path.splitext(
-                l.replace('Icon=', '').strip()
-            )[0]
-    return name, cmd, icon, generic
-
-
-def update_startup_file(start_path, start_stream):
-    with open(start_path, 'r') as f:
-       lines = f.readlines()
-    first_lines = []
-    final_lines = []
-    after_fluxbox = False
-    for line in lines:
-        if after_fluxbox or line.startswith('exec fluxbox'):
-            final_lines.append(line)
-            after_fluxbox = True
-            continue
-        if line.startswith('exec '):
-            continue
-        if line.startswith('# exec '):
-            continue
-        first_lines.append(line)
-    with open(conf.start_path, 'w') as f:
-        f.write(
-            ''.join(first_lines)
-            + ''.join(start_stream)
-            + ''.join(final_lines)
-        )
-
-def contains(toml_stream, cmd):
-    for soft in toml_stream:
-        if toml_stream[soft]['cmd'].strip() == cmd:
-            return True
-    return False
-
-
-class Conf:
-    def __init__(self, user):
-        self.DEBUG = False
-        self.toml_path = 'start.toml'
-        self.start_path = 'startup'
-        if os.path.isdir('.git'):
-            self.DEBUG = True
-        dirname = "/home/%s/.fluxbox/" % user
-        if not os.path.isdir(dirname):
-            return
-        self.toml_path  = dirname + 'start.toml'
-        self.start_path = dirname + 'startup'
-
-
-class Soft:
-    name     = None
-    cmd      = None
-    icon     = None
-    generic  = None
-    disabled = False
-
-    def __init__(self):
-        pass
-
-    def new(self, name, cmd, icon, generic):
-        self.name    = name
-        self.cmd     = cmd
-        self.icon    = icon
-        self.generic = generic
-    
-    def to_dict(self, inc):
-        soft_title = 'soft-%s' % inc
-        dic = {
-            soft_title: {
-                'name':    self.name,
-                'cmd':     self.cmd
-            }
-        }
-        if self.icon:
-            dic[soft_title]['icon']     = self.icon
-        if self.generic:
-            dic[soft_title]['generic']  = self.generic
-        if self.disabled:
-            dic[soft_title]['disabled'] = self.disabled
-        return dic
-
-
-class ConfirmDialog(Gtk.Dialog):
-
-    def __init__(self, parent, title, message):
-        Gtk.Dialog.__init__(
-            self, title, parent, 0,
-            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-            Gtk.STOCK_OK, Gtk.ResponseType.OK)
-        )
-
-        self.set_default_size(150, 100)
-        box = self.get_content_area()
-        if message:
-            label = Gtk.Label(message)
-            box.add(label)
-        self.show_all()
-
-
-class WarningDialog(Gtk.Dialog):
-
-    def __init__(self, parent, title, message):
-        Gtk.Dialog.__init__(
-            self, title, parent, 0,
-            (Gtk.STOCK_OK, Gtk.ResponseType.CANCEL)
-        )
-
-        self.set_default_size(100, 50)
-        box = self.get_content_area()
-        if message:
-            label = Gtk.Label(message)
-            box.add(label)
-        self.show_all()
 
 
 class FluxBoxLauncherWindow(Gtk.Window):
@@ -193,7 +51,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
                 new_toml,
                 **s.to_dict(inc)
             )
-        update_startup_file(conf.start_path, start_stream)
+        conf.update(start_stream)
         with open(conf.toml_path,'w') as f:
             f.write(toml.dumps(new_toml))
         vbox.remove(hbox)
@@ -215,7 +73,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
                 new_toml, 
                 **s.to_dict(inc)
             )
-        update_startup_file(conf.start_path, start_stream)
+        conf.update(start_stream)
         with open(conf.toml_path,'w') as f:
             f.write(toml.dumps(new_toml))
 
@@ -284,7 +142,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
         if not os.path.isfile(f):
             return
         soft = Soft()
-        soft.new(*get_info_desktop(f))
+        soft.new(*get_info(f))
         for s in self.softs:
             if soft.cmd == s.cmd:
                 confirm = WarningDialog(
@@ -303,7 +161,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
                 start_stream.append('# exec %s &\n' % s.cmd)
                 continue
             start_stream.append('exec %s &\n' % s.cmd)
-        update_startup_file(conf.start_path, start_stream)
+        conf.update(start_stream)
         with open(conf.toml_path, 'a+') as f:
             f.write(
                 ' \n'
@@ -405,46 +263,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
         vbox.pack_start(h, True, True, False)
 
         start_stream, new_toml = self.load(conf, vbox)
-        with open(conf.start_path, 'r') as f:
-            lines = f.readlines()
-            first_lines = []
-            final_lines = []
-            after_fluxbox = False
-            for line in lines:
-                if after_fluxbox or line.startswith('exec fluxbox'):
-                    final_lines.append(line)
-                    after_fluxbox = True
-                    continue
-                if line.startswith('exec '):
-                    cmd = line.replace('exec ', '').replace(' &', '').strip()
-                    if contains(new_toml, cmd):
-                        continue
-                    new_toml['soft-%s' % str(len(new_toml) + 1)] = {
-                        'cmd': cmd,
-                        'name': cmd
-                    }
-                    first_lines.append('exec %s &\n' % cmd)
-                    continue
-                if line.startswith('# exec '):
-                    cmd = line.replace('#', '').replace('exec ', '').replace('&', '').strip()
-                    if contains(new_toml, cmd):
-                        continue
-                    new_toml['soft-%s' % str(len(new_toml) + 1)] = {
-                        'cmd': cmd,
-                        'name': cmd,
-                        'disabled': True
-                    }
-                    first_lines.append('# exec %s &\n' % cmd)
-                    continue
-                first_lines.append(line)
-        with open(conf.start_path, 'w') as f:
-            f.write(
-                ''.join(first_lines)
-                + ''.join(start_stream)
-                + ''.join(final_lines)
-            )
-        with open(conf.toml_path,'w') as f:
-            f.write(toml.dumps(new_toml))
+        conf.save(start_stream, new_toml)
         if start_stream == []:
             self.load(conf, vbox)
 

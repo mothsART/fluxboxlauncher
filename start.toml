@@ -6,20 +6,15 @@ name = "Nouveau document"
 icon = "libreoffice-writer"
 
 [soft-3]
-cmd = "system-config-printer"
-name = "Printers"
-icon = "printer"
-
-[soft-2]
 generic = "Outil de traduction"
 cmd = "poeditor"
 name = "Poedit"
 icon = "poedit"
 
-[soft-5]
-cmd = "evince"
-name = "Document Viewer"
-icon = "evince"
+[soft-2]
+cmd = "system-config-printer"
+name = "Printers"
+icon = "printer"
 
 [soft-4]
 disabled = true

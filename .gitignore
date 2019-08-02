@@ -1,0 +1,6 @@
+*.pyc
+
+debian/handymenu
+debian/debhelper-build-stamp
+debian/handymenu.debhelper.log
+debian/handymenu.substvars
