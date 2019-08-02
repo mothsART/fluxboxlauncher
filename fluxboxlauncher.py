@@ -7,20 +7,16 @@ import sys
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk
-import gettext
-import locale
 import toml
 
 from lib.desktop import get_info
 from lib.dialog import ConfirmDialog, WarningDialog
 from lib.config import Conf
 from lib.soft import Soft
-
-local_path = join(dirname(dirname(__file__)), 'locale')
-gettext.bindtextdomain('fluxboxlauncher', local_path)
-gettext.textdomain('fluxboxlauncher')
-_ = gettext.gettext
-
+from lib.locale import (
+    _confirmation, _confirm_question,
+    _drag, _search
+)
 
 class FluxBoxLauncherWindow(Gtk.Window):
     ICONSIZE = 32
@@ -29,8 +25,8 @@ class FluxBoxLauncherWindow(Gtk.Window):
     def del_soft(self, conf, soft, hbox, vbox):
         confirm = ConfirmDialog(
             self,
-            _('Confirmation of deletion'),
-            _('Do you really want to delete this app from Fluxbox launch ?')
+            _confirmation,
+            _confirm_question
         )
         response = confirm.run()
         if not response == Gtk.ResponseType.OK:
@@ -247,12 +243,10 @@ class FluxBoxLauncherWindow(Gtk.Window):
             self.on_drag_data_received,
             conf, vbox
         )
-        l = Gtk.Label(_(
-            "Drag an application here to create a launcher"
-        ))
+        l = Gtk.Label(_drag)
         drag_vbox = Gtk.VBox(homogeneous=False)
         appfinderbtn = Gtk.Button(
-            label = _("Search an application")
+            label = _search
         )
         appfinderbtn.connect("button_press_event", self.appfinder)
         drag_vbox.pack_start(appfinderbtn, False, False, 10)

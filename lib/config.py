@@ -2,7 +2,7 @@ import os
 import toml
 
 
-def update_stream(stream):
+def update_stream(lines, start_stream):
     first_lines = []
     final_lines = []
     after_fluxbox = False
@@ -16,10 +16,10 @@ def update_stream(stream):
         if line.startswith('# exec '):
             continue
         first_lines.append(line)
-    return  ''.join(
-        first_lines,
-        start_stream,
-        final_lines
+    return ''.join(
+        ''.join(first_lines)
+        + ''.join(start_stream)
+        + ''.join(final_lines)
     )
 
 
@@ -74,8 +74,10 @@ class Conf:
                 continue
             first_lines.append(line)
         return ''.join(
-            first_lines
-        ) + ''.join(start_stream) + ''.join(final_lines)
+            ''.join(first_lines)
+            + ''.join(start_stream)
+            + ''.join(final_lines)
+        )
 
     def save(self, start_stream, new_toml):
         with open(self.start_path, 'r') as f:
@@ -89,7 +91,7 @@ class Conf:
     def update(self, start_stream):
         with open(self.start_path, 'r') as f:
            lines = f.readlines()
-        stream = update_stream(lines)
-        with open(conf.start_path, 'w') as f:
+        stream = update_stream(lines, start_stream)
+        with open(self.start_path, 'w') as f:
             f.write(stream)
 

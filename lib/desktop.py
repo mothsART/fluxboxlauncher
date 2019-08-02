@@ -1,3 +1,5 @@
+import locale
+
 def get_info(desktopfile):
     """return infos from a .desktop file"""
     name, cmd, icon, generic= "", "", "", ""
