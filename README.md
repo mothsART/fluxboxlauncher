@@ -1,5 +1,9 @@
 # FluxboxLauncher
 
+[![Build Status](https://travis-ci.org/mothsART/fluxboxlauncher.png?branch=master)](https://travis-ci.org/mothsART/fluxboxlauncher)
+
+[![LICENSE](https://img.shields.io/badge/license-BSD-blue.svg)](LICENSE)
+
 ## Dependances
 
 python-gtk
