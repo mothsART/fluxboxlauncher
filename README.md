@@ -25,6 +25,12 @@ Compile po file to mo :
 msgfmt -o locale/{lang}/LC_MESSAGES/fluxboxlauncher.mo locale/{lang}/LC_MESSAGES/fluxboxlauncher.po
 ```
 
+## Tests
+
+```sh
+python3 -m unittest tests/tests.py
+```
+
 ## Create a Debian package
 
 ```sh

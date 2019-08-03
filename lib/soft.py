@@ -1,4 +1,4 @@
-from .locale import *
+from .i18n import *
 
 class Soft:
     name = None

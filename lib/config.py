@@ -1,4 +1,5 @@
 import os
+import fcntl
 import toml
 
 
@@ -88,10 +89,11 @@ class Conf:
         with open(self.toml_path,'w') as f:
             f.write(toml.dumps(new_toml))
 
-    def update(self, start_stream):
+    def update(self, start_stream, new_toml):
         with open(self.start_path, 'r') as f:
            lines = f.readlines()
         stream = update_stream(lines, start_stream)
         with open(self.start_path, 'w') as f:
             f.write(stream)
-
+        with open(self.toml_path,'w') as f:
+            f.write(toml.dumps(new_toml))

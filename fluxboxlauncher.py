@@ -13,7 +13,7 @@ from lib.desktop import get_info
 from lib.dialog import ConfirmDialog, WarningDialog
 from lib.config import Conf
 from lib.soft import Soft
-from lib.locale import (
+from lib.i18n import (
     _confirmation, _confirm_question,
     _drag, _search
 )
@@ -47,15 +47,13 @@ class FluxBoxLauncherWindow(Gtk.Window):
                 new_toml,
                 **s.to_dict(inc)
             )
-        conf.update(start_stream)
-        with open(conf.toml_path,'w') as f:
-            f.write(toml.dumps(new_toml))
+        conf.update(start_stream, new_toml)
         vbox.remove(hbox)
 
-    def on_switch_activated(self, switch, gparam, soft, conf):
-        soft.disabled = False
-        if switch.get_active():
-            soft.disabled = True
+    def on_checked(self, widget, soft, conf):
+        soft.disabled = True
+        if widget.get_active():
+            soft.disabled = False
         start_stream = []
         inc          = 0
         new_toml     = {}
@@ -69,9 +67,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
                 new_toml, 
                 **s.to_dict(inc)
             )
-        conf.update(start_stream)
-        with open(conf.toml_path,'w') as f:
-            f.write(toml.dumps(new_toml))
+        conf.update(start_stream, new_toml)
 
     def _add_soft(self, conf, soft, vbox):
         hbox = Gtk.HBox(homogeneous=False)
@@ -109,11 +105,11 @@ class FluxBoxLauncherWindow(Gtk.Window):
             img.set_pixel_size(self.ICONSIZE)
 
         label = Gtk.Label(soft.name)
-        switch = Gtk.Switch()
-        switch.set_active(soft.disabled)
-        switch.connect(
-            "notify::active",
-            self.on_switch_activated,
+        activateButton = Gtk.CheckButton()
+        activateButton.set_active(not soft.disabled)
+        activateButton.connect(
+            "toggled",
+            self.on_checked,
             soft,
             conf
         )
@@ -121,7 +117,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
         hbox.pack_start(delbtn, False, False, False)
         hbox.pack_start(img,    False, False, False)
         hbox.pack_start(label,  True,  False, False)
-        hbox.pack_start(switch, False, False, False)
+        hbox.pack_start(activateButton, False, False, False)
 
         vbox.pack_end(hbox,     False, False, False)
 
@@ -132,7 +128,6 @@ class FluxBoxLauncherWindow(Gtk.Window):
         selection, target_type, timestamp,
         conf, vbox
     ):
-
         data = selection.get_data().strip().replace('%20', ' ')
         f = data.replace("file://", "").strip()
         if not os.path.isfile(f):
@@ -157,12 +152,15 @@ class FluxBoxLauncherWindow(Gtk.Window):
                 start_stream.append('# exec %s &\n' % s.cmd)
                 continue
             start_stream.append('exec %s &\n' % s.cmd)
-        conf.update(start_stream)
-        with open(conf.toml_path, 'a+') as f:
-            f.write(
-                ' \n'
-                + toml.dumps(soft.to_dict(len(self.softs)))
-            )
+        conf.update(
+            start_stream,
+            soft.to_dict(len(self.softs))
+        )
+        #with open(conf.toml_path, 'a+') as f:
+        #    f.write(
+        #        ' \n'
+        #        + toml.dumps(soft.to_dict(len(self.softs)))
+        #    )
 
     def appfinder(self, widget=None, event=None):
         os.system('rox /usr/share/applications &')

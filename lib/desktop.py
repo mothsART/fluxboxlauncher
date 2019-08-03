@@ -1,4 +1,6 @@
+import os
 import locale
+
 
 def get_info(desktopfile):
     """return infos from a .desktop file"""
@@ -6,7 +8,7 @@ def get_info(desktopfile):
     nameloc = False
     geneloc = False
     lang = locale.setlocale(locale.LC_ALL, "")[0:2]
-    with open(desktopfile,'r') as d:
+    with open(desktopfile, 'r') as d:
         df = d.readlines()
     for l in df:
         if generic == "" or geneloc == False:
@@ -35,4 +37,3 @@ def get_info(desktopfile):
                 l.replace('Icon=', '').strip()
             )[0]
     return name, cmd, icon, generic
-
