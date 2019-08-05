@@ -7,10 +7,7 @@ class Soft:
     generic = None
     disabled = False
 
-    def __init__(self):
-        pass
-
-    def new(self, name, cmd, icon, generic):
+    def __init__(self, name, cmd, icon, generic):
         self.name = name
         self.cmd = cmd
         self.icon = icon

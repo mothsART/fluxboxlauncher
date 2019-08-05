@@ -17,7 +17,7 @@ Name[fr_FR]=magicolorgrid.desktop
 """
 
 
-class TestConf(TestCase):
+class TestDesktop(TestCase):
 
     @patch('builtins.open', mock_open(read_data=desktop_stream))
     def test_info(self):

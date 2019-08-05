@@ -1,2 +1,2 @@
-from .config import *
-from .desktop import *
+from .config import TestConf
+from .desktop import TestDesktop

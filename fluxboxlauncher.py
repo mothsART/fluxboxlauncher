@@ -10,17 +10,17 @@ from gi.repository import Gtk, Gdk
 import toml
 
 from lib.desktop import get_info
+from lib.soft import Soft
 from lib.dialog import ConfirmDialog, WarningDialog
 from lib.config import Conf
-from lib.soft import Soft
 from lib.i18n import (
+    _duplicate, _app_already_exists,
     _confirmation, _confirm_question,
     _drag, _search
 )
 
 class FluxBoxLauncherWindow(Gtk.Window):
     ICONSIZE = 32
-    softs    = []
 
     def del_soft(self, conf, soft, hbox, vbox):
         confirm = ConfirmDialog(
@@ -33,41 +33,13 @@ class FluxBoxLauncherWindow(Gtk.Window):
             confirm.destroy()
             return
         confirm.destroy()
-        self.softs.remove(soft)
-        new_toml = {}
-        inc = 0
-        start_stream = []
-        for s in self.softs:
-            inc = inc + 1
-            if s.disabled:
-                start_stream.append('# exec %s &\n' % s.cmd)
-            else:
-                start_stream.append('exec %s &\n' % s.cmd)
-            new_toml = dict(
-                new_toml,
-                **s.to_dict(inc)
-            )
-        conf.update(start_stream, new_toml)
         vbox.remove(hbox)
 
     def on_checked(self, widget, soft, conf):
         soft.disabled = True
         if widget.get_active():
             soft.disabled = False
-        start_stream = []
-        inc          = 0
-        new_toml     = {}
-        for s in self.softs:
-            inc = inc + 1
-            if s.disabled:
-                start_stream.append('# exec %s &\n' % s.cmd)
-            else:
-                start_stream.append('exec %s &\n' % s.cmd)
-            new_toml = dict(
-                new_toml, 
-                **s.to_dict(inc)
-            )
-        conf.update(start_stream, new_toml)
+        conf.change_status(soft.disabled)
 
     def _add_soft(self, conf, soft, vbox):
         hbox = Gtk.HBox(homogeneous=False)
@@ -106,7 +78,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
 
         label = Gtk.Label(soft.name)
         activateButton = Gtk.CheckButton()
-        activateButton.set_active(not soft.disabled)
+        activateButton.set_active(soft.disabled)
         activateButton.connect(
             "toggled",
             self.on_checked,
@@ -121,8 +93,6 @@ class FluxBoxLauncherWindow(Gtk.Window):
 
         vbox.pack_end(hbox,     False, False, False)
 
-        self.softs.append(soft)
-
     def on_drag_data_received(
         self, widget, context, x, y,
         selection, target_type, timestamp,
@@ -132,30 +102,23 @@ class FluxBoxLauncherWindow(Gtk.Window):
         f = data.replace("file://", "").strip()
         if not os.path.isfile(f):
             return
-        soft = Soft()
-        soft.new(*get_info(f))
-        for s in self.softs:
-            if soft.cmd == s.cmd:
-                confirm = WarningDialog(
-                    self,
-                    _('Duplicate'),
-                    _('This application already exists')
-                )
-                confirm.run()
-                confirm.destroy()
-                return
-        self._add_soft(conf, soft, vbox)
+        soft = Soft(*get_info(f))
+        has_added = self._add_soft(conf, soft, vbox)
+
+        if not has_added:
+            confirm = WarningDialog(
+                self,
+                _duplicate,
+                _app_already_exists
+            )
+            confirm.run()
+            confirm.destroy()
+            return
+        
         vbox.show_all()
-        start_stream = []
-        for s in self.softs:
-            if s.disabled:
-                start_stream.append('# exec %s &\n' % s.cmd)
-                continue
-            start_stream.append('exec %s &\n' % s.cmd)
-        conf.update(
-            start_stream,
-            soft.to_dict(len(self.softs))
-        )
+        
+        conf.add(soft)
+        self._add_soft(conf, soft, vbox)
         #with open(conf.toml_path, 'a+') as f:
         #    f.write(
         #        ' \n'
@@ -164,54 +127,6 @@ class FluxBoxLauncherWindow(Gtk.Window):
 
     def appfinder(self, widget=None, event=None):
         os.system('rox /usr/share/applications &')
-
-    def load(self, conf, vbox):
-        start_stream  = []
-        self.cmd_list = []
-        new_toml      = {}
-        if not os.path.isfile(conf.toml_path):
-            return start_stream, new_toml
-        with open(conf.toml_path, 'r') as d:
-            try:
-                parsed_toml = toml.loads(d.read())
-            except:
-                print(
-                    _(
-                        '{0} is not a proper TOML file.'
-                    ).format(conf.toml_path)
-                )
-                return start_stream, new_toml
-        if len(parsed_toml) == 0:
-            return start_stream, new_toml
-        def sort_softs(soft):
-            return int(soft.replace('soft-', ''))
-        for soft_index in sorted(parsed_toml, key=sort_softs):
-            soft_conf = parsed_toml[soft_index]
-            if 'cmd' not in soft_conf:
-                continue
-            if soft_conf['cmd'] in self.cmd_list:
-                continue
-            soft = Soft()
-            soft.cmd = soft_conf['cmd']
-            self.cmd_list.append(soft.cmd)
-            if 'name' in soft_conf:
-                soft.name = soft_conf['name']
-            if 'icon' in soft_conf:
-                soft.icon = soft_conf['icon']
-            if 'generic' in soft_conf:
-                soft.generic = soft_conf['generic']
-            if 'disabled' in soft_conf:
-                soft.disabled = soft_conf['disabled']
-            self._add_soft(conf, soft, vbox)
-            if soft.disabled:
-                start_stream.append('# exec %s &\n' % soft.cmd)
-            else:
-                start_stream.append('exec %s &\n' % soft.cmd)
-            new_toml = dict(
-                new_toml, 
-                **soft.to_dict(len(self.softs))
-            )
-        return start_stream, new_toml
 
     def __init__(self, conf):
         if conf.DEBUG:
@@ -254,10 +169,10 @@ class FluxBoxLauncherWindow(Gtk.Window):
         h.pack_start(drag_vbox, True, True, False)
         vbox.pack_start(h, True, True, False)
 
-        start_stream, new_toml = self.load(conf, vbox)
-        conf.save(start_stream, new_toml)
-        if start_stream == []:
-            self.load(conf, vbox)
+        conf.save()
+
+        for soft in conf.softs:
+            self._add_soft(conf, soft, vbox)
 
         swin = Gtk.ScrolledWindow()
         swin.add_with_viewport(vbox)
