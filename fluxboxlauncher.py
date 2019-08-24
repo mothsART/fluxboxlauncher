@@ -19,6 +19,7 @@ from lib.i18n import (
     _drag, _search
 )
 
+
 class FluxBoxLauncherWindow(Gtk.Window):
     ICONSIZE = 32
 

@@ -139,15 +139,6 @@ class Conf:
         with open(self.toml_path,'w') as f:
             f.write(toml.dumps(self.toml_stream))
 
-    def update(self, start_stream, new_toml):
-        with open(self.start_path, 'r') as f:
-           lines = f.readlines()
-        stream = self.update_stream(lines, start_stream)
-        with open(self.start_path, 'w') as f:
-            f.write(stream)
-        with open(self.toml_path,'w') as f:
-            f.write(toml.dumps(new_toml))
-
     def add(self, soft):
         for s in self.softs:
             if soft.cmd == s.cmd:
@@ -174,7 +165,7 @@ class Conf:
 
     def get_soft(self, cmd):
         for soft in self.softs:
-            if soft.cmd == '/usr/local/bin/primtux/handymenu-maxi':
+            if soft.cmd == cmd:
                 return soft
                 break
         return None

@@ -157,7 +157,8 @@ class TestConf(TestCase):
         lines = startup.split('\n')
         lines = [line + '\n' for line in lines]
         r = conf.load(lines[:-1])
-        conf.remove(conf.get_soft('firefox'))
+        has_removed = conf.remove(conf.get_soft('/usr/local/bin/primtux/handymenu-maxi'))
+        assert has_removed == True
         assert str(conf) == startup_delete
 
     def test_disable(self):
