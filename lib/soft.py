@@ -7,6 +7,12 @@ class Soft:
     generic = None
     disabled = False
 
+    def __str__(self):
+        line = 'exec %s &\n' % self.cmd
+        if self.disabled:
+            line = '# %s' % line
+        return line
+
     def __init__(self, name, cmd, icon, generic):
         self.name = name
         self.cmd = cmd

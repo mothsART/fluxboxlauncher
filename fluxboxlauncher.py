@@ -33,6 +33,8 @@ class FluxBoxLauncherWindow(Gtk.Window):
             confirm.destroy()
             return
         confirm.destroy()
+        conf.remove(soft)
+        conf.save()
         vbox.remove(hbox)
 
     def on_checked(self, widget, soft, conf):
@@ -40,6 +42,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
         if widget.get_active():
             soft.disabled = False
         conf.change_status(soft.disabled)
+        conf.save()
 
     def _add_soft(self, conf, soft, vbox):
         hbox = Gtk.HBox(homogeneous=False)
@@ -85,13 +88,12 @@ class FluxBoxLauncherWindow(Gtk.Window):
             soft,
             conf
         )
-
         hbox.pack_start(delbtn, False, False, False)
-        hbox.pack_start(img,    False, False, False)
-        hbox.pack_start(label,  True,  False, False)
+        hbox.pack_start(img, False, False, False)
+        hbox.pack_start(label, True,  False, False)
         hbox.pack_start(activateButton, False, False, False)
 
-        vbox.pack_end(hbox,     False, False, False)
+        vbox.pack_end(hbox, False, False, False)
 
     def on_drag_data_received(
         self, widget, context, x, y,
@@ -103,9 +105,8 @@ class FluxBoxLauncherWindow(Gtk.Window):
         if not os.path.isfile(f):
             return
         soft = Soft(*get_info(f))
-        has_added = self._add_soft(conf, soft, vbox)
 
-        if not has_added:
+        if conf.soft_exist(soft):
             confirm = WarningDialog(
                 self,
                 _duplicate,
@@ -114,16 +115,11 @@ class FluxBoxLauncherWindow(Gtk.Window):
             confirm.run()
             confirm.destroy()
             return
-        
-        vbox.show_all()
-        
-        conf.add(soft)
         self._add_soft(conf, soft, vbox)
-        #with open(conf.toml_path, 'a+') as f:
-        #    f.write(
-        #        ' \n'
-        #        + toml.dumps(soft.to_dict(len(self.softs)))
-        #    )
+        vbox.show_all()
+        conf.add(soft)
+        conf.save()
+        self._add_soft(conf, soft, vbox)
 
     def appfinder(self, widget=None, event=None):
         os.system('rox /usr/share/applications &')
@@ -135,7 +131,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
             self,
             title = 'Fluxbox Launcher'
         )
-        self.set_border_width(0)
+        self.set_border_width(5)
 
         vbox = Gtk.VBox(homogeneous=False)
         
@@ -169,6 +165,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
         h.pack_start(drag_vbox, True, True, False)
         vbox.pack_start(h, True, True, False)
 
+        conf.open()
         conf.save()
 
         for soft in conf.softs:
@@ -177,7 +174,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
         swin = Gtk.ScrolledWindow()
         swin.add_with_viewport(vbox)
         self.add(swin)
-        self.set_default_size(500, 600)
+        self.set_default_size(800, 600)
         self.show_all()
 
 

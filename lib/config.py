@@ -5,11 +5,11 @@ from lib.i18n import _corrupt_toml
 from lib.soft import Soft
 
 class Conf:
-    softs = []
-    startup_stream = ''
-    toml_stream = {}
-
     def __init__(self, user):
+        self.first_lines = []
+        self.softs = []
+        self.last_lines = []
+        self.toml_stream = {}
         self.DEBUG = False
         self.toml_path = 'start.toml'
         self.start_path = 'startup'
@@ -21,6 +21,19 @@ class Conf:
         self.toml_path  = dirname + 'start.toml'
         self.start_path = dirname + 'startup'
 
+    def lines(self):
+        lines = []
+        for soft in self.softs:
+            lines.append(str(soft))
+        return lines
+
+    def __str__(self):
+        return ''.join(
+            ''.join(self.first_lines)
+            + ''.join(self.lines())
+            + ''.join(self.last_lines)
+        )
+
     def _contains(self, cmd):
         for soft in self.toml_stream:
             if self.toml_stream[soft]['cmd'].strip() == cmd:
@@ -30,11 +43,12 @@ class Conf:
     def sort_softs(self, soft):
         return int(soft.replace('soft-', ''))
 
-    def load(self, lines):
-        start_stream  = []
+    def _load_toml(self, toml):
         self.cmd_list = []
-        for soft_index in sorted(self.toml_stream, key=self.sort_softs):
-            soft_conf = self.toml_stream[soft_index]
+        if toml == None or toml == {}:
+            return
+        for soft_index in sorted(toml, key=self.sort_softs):
+            soft_conf = toml[soft_index]
             if 'cmd' not in soft_conf:
                 continue
             if soft_conf['cmd'] in self.cmd_list:
@@ -54,10 +68,6 @@ class Conf:
             disabled = ''
             if 'disabled' in soft_conf:
                 disabled = soft_conf['disabled']
-            if disabled:
-                start_stream.append('# exec %s &\n' % cmd)
-            else:
-                start_stream.append('exec %s &\n' % cmd)
             soft = Soft(name, cmd, icon, generic)
             new_toml = dict(
                 self.toml_stream, 
@@ -65,68 +75,55 @@ class Conf:
             )
             self.softs.append(soft)
 
-        first_lines = []
-        final_lines = []
+    def _load_lines(self, lines):
+        self.first_lines = []
+        self.last_lines = []
         after_fluxbox = False
         for line in lines:
             if after_fluxbox or line.startswith('exec fluxbox'):
-                final_lines.append(line)
+                self.last_lines.append(line)
                 after_fluxbox = True
                 continue
+            cmd = None
             if line.startswith('exec '):
                 cmd = line.replace('exec ', '').replace(' &', '').strip()
-                if self._contains(cmd):
-                    continue
                 self.toml_stream['soft-%s' % str(len(self.toml_stream) + 1)] = {
                     'cmd': cmd,
                     'name': cmd
                 }
-                first_lines.append('exec %s &\n' % cmd)
-                continue
-            if line.startswith('# exec '):
+                new_soft = Soft(cmd, cmd, '', '')
+            elif line.startswith('# exec '):
                 cmd = line.replace('#', '').replace('exec ', '').replace('&', '').strip()
-                if self._contains(cmd):
-                    continue
                 self.toml_stream['soft-%s' % str(len(self.toml_stream) + 1)] = {
                     'cmd': cmd,
                     'name': cmd,
                     'disabled': True
                 }
-                first_lines.append('# exec %s &\n' % cmd)
+                new_soft = Soft(cmd, cmd, '', '')
+                new_soft.disabled = True
+            else:
+                self.first_lines.append(line)
+            if not cmd:
                 continue
-            first_lines.append(line)
-        return ''.join(
-            ''.join(first_lines)
-            + ''.join(start_stream)
-            + ''.join(final_lines)
-        )
+            for soft in self.softs:
+                if soft.cmd == cmd:
+                    continue
+            #new_toml = dict(
+            #    toml_stream, 
+            #    **soft.to_dict(len(self.softs))
+            #)
+            self.softs.append(new_soft)
 
-    def update_stream(self, lines, start_stream):
-        first_lines = []
-        final_lines = []
-        after_fluxbox = False
-        for line in lines:
-            if after_fluxbox or line.startswith('exec fluxbox'):
-                final_lines.append(line)
-                after_fluxbox = True
-                continue
-            if line.startswith('exec '):
-                continue
-            if line.startswith('# exec '):
-                continue
-            first_lines.append(line)
-        return ''.join(
-            ''.join(first_lines)
-            + ''.join(start_stream)
-            + ''.join(final_lines)
-        )
+    def load(self, lines, toml = None):
+        self._load_toml(toml)
+        self._load_lines(lines)
+
 
     def open(self):
         """Open conf files"""
-        lines = []
         if os.path.isfile(self.start_path):
             with open(self.start_path, 'r') as f:
-                lines = f.readlines()
+                self.load(f.readlines())
         if os.path.isfile(self.toml_path):
             with open(self.toml_path, 'r') as d:
                 try:
@@ -135,21 +132,12 @@ class Conf:
                     print(
                         _corrupt_toml.format(self.toml_path)
                     )
-        if len(self.toml_stream) == 0:
-            return lines
-        return lines
 
     def save(self):
-        lines = self.open()
-        # parse conf
-        stream = self.load(lines)
-        # save conf files
         with open(self.start_path, 'w') as f:
-            f.write(stream)
+            f.write(str(self))
         with open(self.toml_path,'w') as f:
             f.write(toml.dumps(self.toml_stream))
-        if self.softs == []:
-            self.load(lines)
 
     def update(self, start_stream, new_toml):
         with open(self.start_path, 'r') as f:
@@ -164,39 +152,14 @@ class Conf:
         for s in self.softs:
             if soft.cmd == s.cmd:
                 return False
-        start_stream = []
-        for s in self.softs:
-            if s.disabled:
-                start_stream.append('# exec %s &\n' % s.cmd)
-                continue
-            start_stream.append('exec %s &\n' % s.cmd)
         self.softs.append(soft)
-        self.update(
-            start_stream,
-            soft.to_dict(len(self.softs))
-        )
         return True
 
     def remove(self, soft):
         if soft not in self.softs:
             return False
         self.softs.remove(soft)
-        new_toml = {}
-        inc = 0
-        start_stream = []
-        for s in self.softs:
-            inc = inc + 1
-            if s.disabled:
-                start_stream.append('# exec %s &\n' % s.cmd)
-            else:
-                start_stream.append('exec %s &\n' % s.cmd)
-            new_toml = dict(
-                new_toml,
-                **s.to_dict(inc)
-            )
-        self.update(start_stream, new_toml)
         return True
-
 
     def change_status(self, is_disabled):
         start_stream = []
@@ -204,12 +167,20 @@ class Conf:
         new_toml = {}
         for s in self.softs:
             inc = inc + 1
-            if is_disabled:
-                start_stream.append('# exec %s &\n' % s.cmd)
-            else:
-                start_stream.append('exec %s &\n' % s.cmd)
             new_toml = dict(
                 new_toml, 
                 **s.to_dict(inc)
             )
-        self.update(start_stream, new_toml)
+
+    def get_soft(self, cmd):
+        for soft in self.softs:
+            if soft.cmd == '/usr/local/bin/primtux/handymenu-maxi':
+                return soft
+                break
+        return None
+
+    def soft_exist(self, soft):
+        for s in self.softs:
+            if s.cmd == soft.cmd:
+                return True
+        return False
