@@ -8,7 +8,6 @@
 ## Dependances
 
 python-gtk
-python-toml
 
 ## launch
 

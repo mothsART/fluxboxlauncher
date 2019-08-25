@@ -31,10 +31,6 @@ msgstr "Doublon"
 msgid "This application already exists"
 msgstr "Cette application existe déjà"
 
-#: ./fluxboxlauncher.py:244
-msgid "{0} is not a proper TOML file."
-msgstr "{0} n'est pas un fichier TOML valide."
-
 #: ./fluxboxlauncher.py:299
 msgid "Drag an application here to create a launcher"
 msgstr "Glissez ici une application"

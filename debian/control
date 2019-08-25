@@ -9,5 +9,5 @@ Package: fluxboxlauncher
 Version: 0.1
 Architecture: all
 Maintainer: Ferry Jérémie <ferryjeremie@free.fr>
-Depends: python, python-gtk2, python-toml, rox-filer, ${misc:Depends}
+Depends: python, python-gtk2, rox-filer, ${misc:Depends}
 Description: Gérer les applications au lancement de FluxBox
