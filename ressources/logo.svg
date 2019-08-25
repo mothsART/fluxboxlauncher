@@ -9,9 +9,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="210mm"
-   height="297mm"
-   viewBox="0 0 210 297"
+   width="159.58328mm"
+   height="159.68045mm"
+   viewBox="0 0 159.58328 159.68045"
    version="1.1"
    id="svg8"
    inkscape:version="0.91 r13725"
@@ -26,20 +26,26 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.74786941"
-     inkscape:cx="330.50079"
-     inkscape:cy="536.391"
+     inkscape:cx="-17.651445"
+     inkscape:cy="312.0093"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
-     showgrid="true"
+     showgrid="false"
      showguides="false"
      inkscape:window-width="1920"
      inkscape:window-height="1056"
      inkscape:window-x="1600"
      inkscape:window-y="24"
-     inkscape:window-maximized="1">
+     inkscape:window-maximized="1"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0">
     <inkscape:grid
        type="xygrid"
-       id="grid857" />
+       id="grid857"
+       originx="-18.065529"
+       originy="-63.325502" />
   </sodipodi:namedview>
   <metadata
      id="metadata5">
@@ -49,14 +55,15 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
      inkscape:label="Calque 1"
      inkscape:groupmode="layer"
-     id="layer1">
+     id="layer1"
+     transform="translate(-18.065529,-73.994041)">
     <rect
        style="fill:#ffaa56;fill-opacity:1;stroke:none;stroke-width:0.26458332;stroke-opacity:1"
        id="rect815"
@@ -90,11 +97,10 @@
     </g>
     <path
        style="fill:#ffffff;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
-       d="m 436.53906,362.6543 c 0,0 -163.2246,135.05665 -236.97461,188.80664 -39.56433,-19.0985 -65.12109,15.9082 -65.12109,15.9082 0,0 4.72349,-42.51478 -35.455079,-63.94336 -40.17857,-21.42857 -80.80664,3.76172 -80.80664,3.76172 L 20.139205,809.54655 283.95442,555.03559 31.799911,867.45106 37.5,880.93359 51.162109,884.86523 370.69727,485.67512 82.736328,890.67578 493.33594,892.16211 c 0,0 -19.88,-70.17229 -48.17578,-96.44141 C 419.99949,772.36216 375,771.11133 375,771.11133 c 0,0 10.60032,-19.78319 -5.93555,-50.89258 C 356.25058,696.11161 318.75,696.11133 318.75,696.11133 c 0,0 12.02593,-18.01211 16.48633,-42.26172 4.46039,-24.24961 -23.56055,-40.9043 -23.56055,-40.9043 l 159.74805,-227.5 z M 336.10352,474.97852 31.977209,773.64148 40,712.36133 Z"
-       transform="scale(0.28222222,0.28222223)"
+       d="m 418.35742,100.4707 c 0,0 -163.2246,135.05665 -236.97461,188.80664 -39.56433,-19.0985 -65.12109,15.90821 -65.12109,15.90821 0,0 4.72349,-42.51478 -35.455079,-63.94336 -11.985214,-6.39212 -24.001686,-8.61747 -34.976563,-8.61914 l 0,198.30468 272.091802,-218.13281 -272.091802,267.20313 0,25.03906 219.943362,-212.18555 -219.943362,272.50782 0,0.4375 32.683594,0 274.001948,-342.30469 -243.38281,342.30469 340.63477,0 c -6.64487,-12.64126 -14.33676,-24.41285 -22.78906,-32.25977 -25.16067,-23.35854 -70.16016,-24.60938 -70.16016,-24.60938 0,0 10.60032,-19.78318 -5.93555,-50.89257 -12.81387,-24.10715 -50.31445,-24.10743 -50.31445,-24.10743 0,0 12.02593,-18.0121 16.48633,-42.26171 4.46039,-24.24962 -23.56055,-40.9043 -23.56055,-40.9043 l 159.74805,-227.5 -34.88477,-22.79102 z"
+       transform="matrix(0.28222222,0,0,0.28222221,5.1312631,73.994041)"
        id="path835"
-       inkscape:connector-curvature="0"
-       sodipodi:nodetypes="cccscccccccccscscsccccccc" />
+       inkscape:connector-curvature="0" />
     <path
        style="fill:#800000;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"
        d="m 85.180924,116.72485 26.610226,-3.05314 10.63172,-5.21381 6.25665,4.19622 -5.34737,7.01776 -0.48577,23.13585 37.66453,-63.297122 z"
