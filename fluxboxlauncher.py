@@ -38,10 +38,12 @@ class FluxBoxLauncherWindow(Gtk.Window):
         vbox.remove(hbox)
 
     def on_checked(self, widget, soft, conf):
-        soft.disabled = True
         if widget.get_active():
             soft.disabled = False
-        conf.change_status(soft.disabled)
+            conf.enable(soft)
+        else:
+            soft.disabled = True
+            conf.disable(soft)
         conf.save()
 
     def _add_soft(self, conf, soft, vbox):
@@ -64,7 +66,10 @@ class FluxBoxLauncherWindow(Gtk.Window):
         if (
             soft.icon != None
             and os.path.isfile(soft.icon)
-            and (icon.endswith('.png') or icon.endswith('.jpg'))
+            and (
+                soft.icon.endswith('.png')
+                or soft.icon.endswith('.jpg')
+            )
         ):
             pixbuf = Gtk.gdk.pixbuf_new_from_file_at_size(
                 soft.icon,
@@ -81,13 +86,14 @@ class FluxBoxLauncherWindow(Gtk.Window):
 
         label = Gtk.Label(soft.name)
         activateButton = Gtk.CheckButton()
-        activateButton.set_active(soft.disabled)
+        activateButton.set_active(not soft.disabled)
         activateButton.connect(
             "toggled",
             self.on_checked,
             soft,
             conf
         )
+        activateButton.set_tooltip_text("actif ?")
         hbox.pack_start(delbtn, False, False, False)
         hbox.pack_start(img, False, False, False)
         hbox.pack_start(label, True,  False, False)
@@ -170,7 +176,11 @@ class FluxBoxLauncherWindow(Gtk.Window):
 
         for soft in conf.softs:
             self._add_soft(conf, soft, vbox)
-
+        label = Gtk.Label("activé ?")
+        hbox = Gtk.HBox(homogeneous=False)
+        hbox.pack_end(label, False, False, False)
+        vbox.pack_end(hbox, False, False, False)
+        
         swin = Gtk.ScrolledWindow()
         swin.add_with_viewport(vbox)
         self.add(swin)
