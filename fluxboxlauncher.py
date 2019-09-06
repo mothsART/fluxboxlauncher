@@ -15,8 +15,29 @@ from lib.config import Conf
 from lib.i18n import (
     _duplicate, _app_already_exists,
     _confirmation, _confirm_question,
-    _drag, _search
+    _drag, _search, _activate
 )
+
+def gtk_style():
+    css = b"""
+#drag-zone {
+    background-color: white;
+    border: dashed red 1px;
+    margin: 20px;
+}
+
+#apps {
+    border-bottom: solid grey 1px;
+}
+    """
+    style_provider = Gtk.CssProvider()
+    style_provider.load_from_data(css)
+
+    Gtk.StyleContext.add_provider_for_screen(
+        Gdk.Screen.get_default(),
+        style_provider,
+        Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+    )
 
 
 class FluxBoxLauncherWindow(Gtk.Window):
@@ -47,9 +68,9 @@ class FluxBoxLauncherWindow(Gtk.Window):
         conf.save()
 
     def _add_soft(self, conf, soft, vbox):
-        hbox = Gtk.HBox(homogeneous=False)
+        hbox = Gtk.HBox(homogeneous=False, margin=5)
 
-        delbtn = Gtk.Button()
+        delbtn = Gtk.Button(margin=5)
         deli = Gtk.Image()
         deli.set_from_stock(Gtk.STOCK_DELETE, Gtk.IconSize.MENU)
         delbtn.set_image(deli)
@@ -62,7 +83,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
             vbox
         )
 
-        img = Gtk.Image()
+        img = Gtk.Image(margin=5)
         if (
             soft.icon != None
             and os.path.isfile(soft.icon)
@@ -84,8 +105,8 @@ class FluxBoxLauncherWindow(Gtk.Window):
             img.set_from_icon_name(soft.icon, self.ICONSIZE)
             img.set_pixel_size(self.ICONSIZE)
 
-        label = Gtk.Label(soft.name)
-        activateButton = Gtk.CheckButton()
+        label = Gtk.Label(soft.name, margin=5)
+        activateButton = Gtk.CheckButton(margin=5)
         activateButton.set_active(not soft.disabled)
         activateButton.connect(
             "toggled",
@@ -93,12 +114,11 @@ class FluxBoxLauncherWindow(Gtk.Window):
             soft,
             conf
         )
-        activateButton.set_tooltip_text("actif ?")
         hbox.pack_start(delbtn, False, False, False)
         hbox.pack_start(img, False, False, False)
         hbox.pack_start(label, True,  False, False)
         hbox.pack_start(activateButton, False, False, False)
-
+        hbox.set_name('apps')
         vbox.pack_end(hbox, False, False, False)
 
     def on_drag_data_received(
@@ -148,23 +168,26 @@ class FluxBoxLauncherWindow(Gtk.Window):
             )
         ]
         h = Gtk.HBox(homogeneous=False)
+        h.set_name('drag-zone')
         h.drag_dest_set(
             Gtk.DestDefaults.ALL,
             dnd_list, 
             Gdk.DragAction.COPY
         )
+        h.set_property("height-request", 200)
         h.connect(
             "drag-data-received",
             self.on_drag_data_received,
             conf, vbox
         )
         l = Gtk.Label(_drag)
-        drag_vbox = Gtk.VBox(homogeneous=False)
         appfinderbtn = Gtk.Button(
-            label = _search
+            label = _search,
+            margin=10
         )
         appfinderbtn.connect("button_press_event", self.appfinder)
-        drag_vbox.pack_start(appfinderbtn, False, False, 10)
+        vbox.pack_start(appfinderbtn, False, False, 10)
+        drag_vbox = Gtk.VBox(homogeneous=False)
         drag_vbox.pack_start(l, True, True, 10)
         appfinderbtn.show()
         l.show()
@@ -176,7 +199,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
 
         for soft in conf.softs:
             self._add_soft(conf, soft, vbox)
-        label = Gtk.Label("activé ?")
+        label = Gtk.Label(_activate, margin=5)
         hbox = Gtk.HBox(homogeneous=False)
         hbox.pack_end(label, False, False, False)
         vbox.pack_end(hbox, False, False, False)
@@ -192,6 +215,7 @@ if __name__ == "__main__":
     user = None
     if len(sys.argv) > 1:
         user = sys.argv[1]
+    gtk_style()
     win = FluxBoxLauncherWindow(Conf(user))
     win.connect("destroy", Gtk.main_quit)
     win.show_all()

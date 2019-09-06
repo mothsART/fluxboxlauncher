@@ -17,3 +17,5 @@ _confirm_question = _('Do you really want to delete this app from Fluxbox launch
 
 _drag = _("Drag an application here to create a launcher")
 _search = _("Search an application")
+
+_activate = _("activate ?")
