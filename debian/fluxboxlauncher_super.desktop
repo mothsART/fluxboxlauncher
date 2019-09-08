@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=0.1
+Exec=fluxboxlauncher_super
+Icon=fluxboxlauncher_super
+Terminal=false
+Type=Application
+Categories=Misc;
+Keywords=fluxbox;
+
+Name=FluxboxLauncher
+Comment=Manage starting applications on Fluxbox.
+Name[fr]=FluxboxLauncher
+Comment[fr]=Gérer les applications de la session super au lancement de Fluxbox.

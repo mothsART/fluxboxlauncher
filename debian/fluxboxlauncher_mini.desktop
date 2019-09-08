@@ -1,0 +1,13 @@
+[Desktop Entry]
+Version=0.1
+Exec=fluxboxlauncher_mini
+Icon=fluxboxlauncher_mini
+Terminal=false
+Type=Application
+Categories=Misc;
+Keywords=fluxbox;
+
+Name=FluxboxLauncher
+Comment=Manage starting applications on Fluxbox.
+Name[fr]=FluxboxLauncher
+Comment[fr]=Gérer les applications de la session mini au lancement de Fluxbox.
