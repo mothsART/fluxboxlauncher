@@ -1,4 +1,4 @@
-[![](./logo.png)]()
+![](./ressources/logo.svg)
 
 # FluxboxLauncher
 
