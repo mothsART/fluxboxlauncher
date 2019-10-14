@@ -42,3 +42,10 @@ git clone https://github.com/mothsART/fluxboxlauncher.git
 cd fluxboxlauncher
 dpkg-buildpackage -us -uc
 ```
+
+and use it :
+
+```sh
+sudo dpkg -i /path/to/deb/file
+sudo apt-get install -f
+```
