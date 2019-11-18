@@ -10,12 +10,13 @@ from gi.repository import Gtk, Gdk
 
 from lib.desktop import get_info
 from lib.soft import Soft
-from lib.dialog import ConfirmDialog, WarningDialog
+from lib.dialog import ConfirmDialog, WarningDialog, CmdLineDialog
 from lib.config import Conf
 from lib.i18n import (
     _duplicate, _app_already_exists,
     _confirmation, _confirm_question,
-    _drag, _search, _activate
+    _drag, _search, _activate,
+    _add_cmd_line
 )
 
 def gtk_style():
@@ -141,14 +142,31 @@ class FluxBoxLauncherWindow(Gtk.Window):
             confirm.run()
             confirm.destroy()
             return
+        soft = Soft(*get_info(f))
         self._add_soft(conf, soft, vbox)
         vbox.show_all()
         conf.add(soft)
         conf.save()
-        self._add_soft(conf, soft, vbox)
 
     def appfinder(self, widget=None, event=None):
         os.system('rox /usr/share/applications &')
+
+    def add_cmd(self, widget, event, conf, vbox):
+        confirm = CmdLineDialog(
+            self,
+            _add_cmd_line
+        )
+        response = confirm.run()
+        if not response == Gtk.ResponseType.OK:
+            confirm.destroy()
+            return
+        cmd = confirm.entry.get_text().strip()
+        confirm.destroy()
+        soft = Soft(cmd, cmd)
+        self._add_soft(conf, soft, vbox)
+        vbox.show_all()
+        conf.add(soft)
+        conf.save()
 
     def __init__(self, conf):
         if conf.DEBUG:
@@ -180,14 +198,38 @@ class FluxBoxLauncherWindow(Gtk.Window):
             self.on_drag_data_received,
             conf, vbox
         )
-        l = Gtk.Label(_drag)
-        appfinderbtn = Gtk.Button(
-            label = _search,
+
+        horizontal_header = Gtk.HBox(homogeneous=False)
+        # add a shell cmd
+        cmd_btn = Gtk.Button(
+            label = ' ' + _add_cmd_line,
             margin=10
         )
+        cmd_btn.connect(
+            "button_press_event",
+            self.add_cmd,
+            conf, vbox
+        )
+        addi = Gtk.Image()
+        addi.set_from_stock(Gtk.STOCK_ADD, Gtk.IconSize.MENU)
+        cmd_btn.set_image(addi)
+        horizontal_header.pack_start(cmd_btn, True, True, False)
+
+        # search button
+        appfinderbtn = Gtk.Button(
+            label = ' ' + _search,
+            margin=10
+        )
+        addi = Gtk.Image()
+        addi.set_from_stock(Gtk.STOCK_FIND, Gtk.IconSize.MENU)
+        appfinderbtn.set_image(addi)
         appfinderbtn.connect("button_press_event", self.appfinder)
-        vbox.pack_start(appfinderbtn, False, False, 10)
+        horizontal_header.pack_start(appfinderbtn, True, True, False)
+        vbox.pack_start(horizontal_header, True, True, False)
+
+        # drag and drop widget
         drag_vbox = Gtk.VBox(homogeneous=False)
+        l = Gtk.Label(_drag)
         drag_vbox.pack_start(l, True, True, 10)
         appfinderbtn.show()
         l.show()
