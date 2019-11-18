@@ -13,7 +13,7 @@ class Soft:
             line = '# %s' % line
         return line
 
-    def __init__(self, name, cmd, icon, generic):
+    def __init__(self, name, cmd, icon=None, generic=None):
         self.name = name
         self.cmd = cmd
         self.icon = icon

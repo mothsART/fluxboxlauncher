@@ -41,3 +41,6 @@ msgstr "Recherchez une application"
 
 msgid "activate ?"
 msgstr "activé ?"
+
+msgid "Add command line"
+msgstr "Ajouter une ligne de commande"

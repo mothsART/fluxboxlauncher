@@ -29,6 +29,12 @@ Compile po file to mo :
 msgfmt -o locale/{lang}/LC_MESSAGES/fluxboxlauncher.mo locale/{lang}/LC_MESSAGES/fluxboxlauncher.po
 ```
 
+ie : in french
+
+```sh
+msgfmt -o locale/fr/LC_MESSAGES/fluxboxlauncher.mo locale/fr/LC_MESSAGES/fluxboxlauncher.po
+```
+
 ## Tests
 
 ```sh
