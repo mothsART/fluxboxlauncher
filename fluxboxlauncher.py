@@ -68,7 +68,9 @@ class FluxBoxLauncherWindow(Gtk.Window):
             conf.disable(soft)
         conf.save()
 
-    def _add_soft(self, conf, soft, vbox):
+    def _add_soft(self, conf, soft, vbox, hbox_header=None):
+        if hbox_header:
+            vbox.remove(hbox_header)
         hbox = Gtk.HBox(homogeneous=False, margin=5)
 
         delbtn = Gtk.Button(margin=5)
@@ -121,29 +123,29 @@ class FluxBoxLauncherWindow(Gtk.Window):
         hbox.pack_start(activateButton, False, False, False)
         hbox.set_name('apps')
         vbox.pack_end(hbox, False, False, False)
+        if hbox_header:
+            vbox.pack_end(hbox_header, False, False, False)
 
     def on_drag_data_received(
         self, widget, context, x, y,
         selection, target_type, timestamp,
-        conf, vbox
+        conf, vbox, hbox_header
     ):
         data = selection.get_data().strip().replace('%20', ' ')
         f = data.replace("file://", "").strip()
         if not os.path.isfile(f):
             return
         soft = Soft(*get_info(f))
-
         if conf.soft_exist(soft):
-            confirm = WarningDialog(
+            confirmWarning = WarningDialog(
                 self,
                 _duplicate,
                 _app_already_exists
             )
-            confirm.run()
-            confirm.destroy()
+            confirmWarning.run()
+            confirmWarning.destroy()
             return
-        soft = Soft(*get_info(f))
-        self._add_soft(conf, soft, vbox)
+        self._add_soft(conf, soft, vbox, hbox_header)
         vbox.show_all()
         conf.add(soft)
         conf.save()
@@ -151,7 +153,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
     def appfinder(self, widget=None, event=None):
         os.system('rox /usr/share/applications &')
 
-    def add_cmd(self, widget, event, conf, vbox):
+    def add_cmd(self, widget, event, conf, vbox, hbox_header):
         confirm = CmdLineDialog(
             self,
             _add_cmd_line
@@ -161,9 +163,20 @@ class FluxBoxLauncherWindow(Gtk.Window):
             confirm.destroy()
             return
         cmd = confirm.entry.get_text().strip()
-        confirm.destroy()
         soft = Soft(cmd, cmd)
-        self._add_soft(conf, soft, vbox)
+        if conf.soft_exist(soft):
+            confirmWarning = WarningDialog(
+                self,
+                _duplicate,
+                _app_already_exists
+            )
+            confirmWarning.run()
+            confirmWarning.destroy()
+            confirm.destroy()
+            self.add_cmd(widget, event, conf, vbox, hbox_header)
+            return
+        confirm.destroy()
+        self._add_soft(conf, soft, vbox, hbox_header)
         vbox.show_all()
         conf.add(soft)
         conf.save()
@@ -178,6 +191,10 @@ class FluxBoxLauncherWindow(Gtk.Window):
         self.set_border_width(5)
 
         vbox = Gtk.VBox(homogeneous=False)
+
+        label = Gtk.Label(_activate, margin=5)
+        hbox_header = Gtk.HBox(homogeneous=False)
+        hbox_header.pack_end(label, False, False, False)
         
         TARGET_TYPE_URI_LIST = 80
         dnd_list = [ 
@@ -196,10 +213,11 @@ class FluxBoxLauncherWindow(Gtk.Window):
         h.connect(
             "drag-data-received",
             self.on_drag_data_received,
-            conf, vbox
+            conf, vbox, hbox_header
         )
 
         horizontal_header = Gtk.HBox(homogeneous=False)
+
         # add a shell cmd
         cmd_btn = Gtk.Button(
             label = ' ' + _add_cmd_line,
@@ -208,7 +226,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
         cmd_btn.connect(
             "button_press_event",
             self.add_cmd,
-            conf, vbox
+            conf, vbox, hbox_header
         )
         addi = Gtk.Image()
         addi.set_from_stock(Gtk.STOCK_ADD, Gtk.IconSize.MENU)
@@ -241,10 +259,9 @@ class FluxBoxLauncherWindow(Gtk.Window):
 
         for soft in conf.softs:
             self._add_soft(conf, soft, vbox)
-        label = Gtk.Label(_activate, margin=5)
-        hbox = Gtk.HBox(homogeneous=False)
-        hbox.pack_end(label, False, False, False)
-        vbox.pack_end(hbox, False, False, False)
+
+        # activate header
+        vbox.pack_end(hbox_header, False, False, False)
         
         swin = Gtk.ScrolledWindow()
         swin.add_with_viewport(vbox)
