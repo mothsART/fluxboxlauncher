@@ -119,7 +119,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
         )
         hbox.pack_start(delbtn, False, False, False)
         hbox.pack_start(img, False, False, False)
-        hbox.pack_start(label, True,  False, False)
+        hbox.pack_start(label, True, False, False)
         hbox.pack_start(activateButton, False, False, False)
         hbox.set_name('apps')
         vbox.pack_end(hbox, False, False, False)

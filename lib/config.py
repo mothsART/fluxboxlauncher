@@ -6,7 +6,7 @@ from lib.desktop import get_info
 
 class Conf:
     def __init__(self, user):
-        """Intialisation fluxboxlauncher config"""
+        """Init fluxboxlauncher config"""
         self.first_lines = []
         self.softs = []
         self.last_lines = []
