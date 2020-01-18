@@ -48,3 +48,12 @@ git clone https://github.com/mothsART/fluxboxlauncher.git
 cd fluxboxlauncher
 dpkg-buildpackage -us -uc
 ```
+
+## Create a Nix package
+
+```sh
+nix-build built.nix
+```
+
+ 
+ 
