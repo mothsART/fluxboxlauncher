@@ -2,6 +2,7 @@
 , python3
 , gtk3
 , gobject-introspection
+, gettext
 , buildPythonApplication ? python3.pkgs.buildPythonApplication
 }:
 

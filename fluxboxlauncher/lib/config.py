@@ -1,8 +1,8 @@
 import os
 from os.path import join, exists
 
-from lib.soft import Soft
-from lib.desktop import get_info
+from fluxboxlauncher.lib.soft import Soft
+from fluxboxlauncher.lib.desktop import get_info
 
 class Conf:
     def __init__(self, user):

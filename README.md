@@ -38,7 +38,7 @@ msgfmt -o locale/fr/LC_MESSAGES/fluxboxlauncher.mo locale/fr/LC_MESSAGES/fluxbox
 ## Tests
 
 ```sh
-python3 -m unittest tests/tests.py
+python3 -m unittest fluxboxlauncher/tests/tests.py
 ```
 
 ## Create a Debian package
@@ -52,7 +52,7 @@ dpkg-buildpackage -us -uc
 ## Create a Nix package
 
 ```sh
-nix-build built.nix
+nix-build
 ```
 
  

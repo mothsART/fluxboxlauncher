@@ -8,11 +8,11 @@ import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk
 
-from lib.desktop import get_info
-from lib.soft import Soft
-from lib.dialog import ConfirmDialog, WarningDialog, CmdLineDialog
-from lib.config import Conf
-from lib.i18n import (
+from fluxboxlauncher.lib.desktop import get_info
+from fluxboxlauncher.lib.soft import Soft
+from fluxboxlauncher.lib.dialog import ConfirmDialog, WarningDialog, CmdLineDialog
+from fluxboxlauncher.lib.config import Conf
+from fluxboxlauncher.lib.i18n import (
     _duplicate, _app_already_exists,
     _confirmation, _confirm_question,
     _drag, _search, _activate,
@@ -270,7 +270,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
         self.show_all()
 
 
-if __name__ == "__main__":
+def main():
     user = None
     if len(sys.argv) > 1:
         user = sys.argv[1]
@@ -280,3 +280,6 @@ if __name__ == "__main__":
     win.show_all()
     Gtk.main()
     exit(0)
+    
+if __name__ == "__main__":
+    main()

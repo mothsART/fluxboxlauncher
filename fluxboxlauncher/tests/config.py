@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from lib.config import Conf
-from lib.soft import Soft
+from fluxboxlauncher.lib.config import Conf
+from fluxboxlauncher.lib.soft import Soft
 
 startup = """#!/bin/sh
 #
