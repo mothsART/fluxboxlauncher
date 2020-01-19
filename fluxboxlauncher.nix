@@ -1,20 +1,34 @@
 { lib
 , python3
 , gtk3
+, wrapGAppsHook
+, glibcLocales
 , gobject-introspection
 , gettext
-, buildPythonApplication ? python3.pkgs.buildPythonApplication
+, pango
+, gdk-pixbuf
+, atk
 }:
 
-buildPythonApplication rec {
+python3.pkgs.buildPythonApplication rec {
   pname = "fluxboxlauncher";
   version = "0.1";
 
   src = lib.cleanSource ./.;
 
-  buildInputs = [
+  nativeBuildInputs = [
+    wrapGAppsHook
     gobject-introspection
+    pango
+    gdk-pixbuf
+    atk
+    gettext
+    glibcLocales
+  ];
+
+  buildInputs = [
     gtk3
+    python3
   ];
 
   propagatedBuildInputs = with python3.pkgs; [

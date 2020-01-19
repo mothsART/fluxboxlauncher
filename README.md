@@ -49,11 +49,28 @@ cd fluxboxlauncher
 dpkg-buildpackage -us -uc
 ```
 
+and launch with :
+
+```sh
+sudo dpkg -i ../fluxboxlauncher_*_all.deb
+```
+
 ## Create a Nix package
 
 ```sh
 nix-build
 ```
 
+launch local :
+
+```sh
+nix run -c fluxboxlauncher
+```
+
+launch after build :
+
+```sh
+nix-shell --run fluxboxlauncher
+```
  
  

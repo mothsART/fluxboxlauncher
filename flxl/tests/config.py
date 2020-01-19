@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from fluxboxlauncher.lib.config import Conf
-from fluxboxlauncher.lib.soft import Soft
+from flxl.lib.config import Conf
+from flxl.lib.soft import Soft
 
 startup = """#!/bin/sh
 #

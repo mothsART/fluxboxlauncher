@@ -1,5 +1,9 @@
 *.pyc
 
+build
+fluxboxlauncher.egg-info/
+result
+
 debian/files
 debian/fluxboxlauncher
 debian/debhelper-build-stamp

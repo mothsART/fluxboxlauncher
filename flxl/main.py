@@ -1,18 +1,16 @@
-#!/usr/bin/python
-# -*- coding:Utf-8 -*- 
-
 import os
 from os.path import dirname, join
 import sys
+
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk
 
-from fluxboxlauncher.lib.desktop import get_info
-from fluxboxlauncher.lib.soft import Soft
-from fluxboxlauncher.lib.dialog import ConfirmDialog, WarningDialog, CmdLineDialog
-from fluxboxlauncher.lib.config import Conf
-from fluxboxlauncher.lib.i18n import (
+from .lib.desktop import get_info
+from .lib.soft import Soft
+from .lib.dialog import ConfirmDialog, WarningDialog, CmdLineDialog
+from .lib.config import Conf
+from .lib.i18n import (
     _duplicate, _app_already_exists,
     _confirmation, _confirm_question,
     _drag, _search, _activate,
@@ -280,6 +278,3 @@ def main():
     win.show_all()
     Gtk.main()
     exit(0)
-    
-if __name__ == "__main__":
-    main()
