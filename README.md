@@ -12,7 +12,7 @@ python-gtk
 ## launch
 
 ```sh
-python ./fluxboxlauncher.py USERNAME
+./fluxboxlauncher.py USERNAME
 ```
 
 ## i18n
@@ -38,7 +38,7 @@ msgfmt -o locale/fr/LC_MESSAGES/fluxboxlauncher.mo locale/fr/LC_MESSAGES/fluxbox
 ## Tests
 
 ```sh
-python3 -m unittest fluxboxlauncher/tests/tests.py
+python3 -m unittest flxl/tests/tests.py
 ```
 
 ## Create a Debian package
