@@ -7,7 +7,6 @@
 , gettext
 , pango
 , gdk-pixbuf
-, locale
 , atk
 }:
 
