@@ -4,7 +4,6 @@ import os
 import glob
 from setuptools import setup
 
-GETTEXT_NAME="apturl"
 I18NFILES = []
 for filepath in glob.glob("flxl/locale/*/LC_MESSAGES/*.mo"):
     lang = filepath[len("flxl/locale/"):]
