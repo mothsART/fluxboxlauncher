@@ -13,7 +13,7 @@ Terminal=false
 Type=Application
 Categories=Graphics;Illustration;
 Keywords=svg;interactive;education;
-Name[fr_FR]=magicolorgrid.desktop
+Name[fr_FR]=MagicolorGrid en français
 """
 
 
@@ -21,8 +21,8 @@ class TestDesktop(TestCase):
 
     @patch('builtins.open', mock_open(read_data=desktop_stream))
     def test_info(self):
-        name, cmd, icon, generic = get_info('magicolorgrid.desktop')
-        assert name == 'MagicolorGrid'
+        name, cmd, icon, generic = get_info('magicolorgrid.desktop', 'fr_FR')
+        assert name == 'MagicolorGrid en français'
         assert cmd == 'magicolorgrid'
         assert icon == '/usr/share/applications/magicolorgrid/favicon'
         assert generic == ''
