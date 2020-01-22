@@ -1,12 +1,12 @@
 import os
 from os.path import join, exists
 
-from lib.soft import Soft
-from lib.desktop import get_info
+from .soft import Soft
+from .desktop import get_info
 
 class Conf:
     def __init__(self, user):
-        """Intialisation fluxboxlauncher config"""
+        """Init fluxboxlauncher config"""
         self.first_lines = []
         self.softs = []
         self.last_lines = []

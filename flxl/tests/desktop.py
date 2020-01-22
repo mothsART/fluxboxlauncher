@@ -1,7 +1,7 @@
 from unittest import TestCase
 from unittest.mock import patch, mock_open
 
-from lib.desktop import get_info
+from flxl.lib.desktop import get_info
 
 desktop_stream = """"[Desktop Entry]
 Version=1.0

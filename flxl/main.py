@@ -1,18 +1,16 @@
-#!/usr/bin/python
-# -*- coding:Utf-8 -*- 
-
 import os
 from os.path import dirname, join
 import sys
+
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk, Gdk
 
-from lib.desktop import get_info
-from lib.soft import Soft
-from lib.dialog import ConfirmDialog, WarningDialog, CmdLineDialog
-from lib.config import Conf
-from lib.i18n import (
+from .lib.desktop import get_info
+from .lib.soft import Soft
+from .lib.dialog import ConfirmDialog, WarningDialog, CmdLineDialog
+from .lib.config import Conf
+from .lib.i18n import (
     _duplicate, _app_already_exists,
     _confirmation, _confirm_question,
     _drag, _search, _activate,
@@ -44,7 +42,7 @@ def gtk_style():
 class FluxBoxLauncherWindow(Gtk.Window):
     ICONSIZE = 32
 
-    def del_soft(self, conf, soft, hbox, vbox):
+    def del_soft(self, conf, soft, hbox, vbox, hbox_header=None):
         confirm = ConfirmDialog(
             self,
             _confirmation,
@@ -58,6 +56,8 @@ class FluxBoxLauncherWindow(Gtk.Window):
         conf.remove(soft)
         conf.save()
         vbox.remove(hbox)
+        if hbox_header and not conf.softs:
+            vbox.remove(hbox_header)
 
     def on_checked(self, widget, soft, conf):
         if widget.get_active():
@@ -69,7 +69,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
         conf.save()
 
     def _add_soft(self, conf, soft, vbox, hbox_header=None):
-        if hbox_header:
+        if hbox_header and conf.softs:
             vbox.remove(hbox_header)
         hbox = Gtk.HBox(homogeneous=False, margin=5)
 
@@ -83,9 +83,9 @@ class FluxBoxLauncherWindow(Gtk.Window):
             conf,
             soft,
             hbox,
-            vbox
+            vbox,
+            hbox_header
         )
-
         img = Gtk.Image(margin=5)
         if (
             soft.icon != None
@@ -119,7 +119,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
         )
         hbox.pack_start(delbtn, False, False, False)
         hbox.pack_start(img, False, False, False)
-        hbox.pack_start(label, True,  False, False)
+        hbox.pack_start(label, True, False, False)
         hbox.pack_start(activateButton, False, False, False)
         hbox.set_name('apps')
         vbox.pack_end(hbox, False, False, False)
@@ -131,8 +131,8 @@ class FluxBoxLauncherWindow(Gtk.Window):
         selection, target_type, timestamp,
         conf, vbox, hbox_header
     ):
-        data = selection.get_data().strip().replace('%20', ' ')
-        f = data.replace("file://", "").strip()
+        data = selection.get_data().strip().replace(b'%20', b' ')
+        f = data.replace(b"file://", b"").strip()
         if not os.path.isfile(f):
             return
         soft = Soft(*get_info(f))
@@ -188,6 +188,9 @@ class FluxBoxLauncherWindow(Gtk.Window):
             self,
             title = 'Fluxbox Launcher'
         )
+        conf.open()
+        conf.save()
+
         self.set_border_width(5)
 
         vbox = Gtk.VBox(homogeneous=False)
@@ -254,15 +257,13 @@ class FluxBoxLauncherWindow(Gtk.Window):
         h.pack_start(drag_vbox, True, True, False)
         vbox.pack_start(h, True, True, False)
 
-        conf.open()
-        conf.save()
-
         for soft in conf.softs:
             self._add_soft(conf, soft, vbox)
 
         # activate header
-        vbox.pack_end(hbox_header, False, False, False)
-        
+        if conf.softs:
+            vbox.pack_end(hbox_header, False, False, False)
+
         swin = Gtk.ScrolledWindow()
         swin.add_with_viewport(vbox)
         self.add(swin)
@@ -270,7 +271,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
         self.show_all()
 
 
-if __name__ == "__main__":
+def main():
     user = None
     if len(sys.argv) > 1:
         user = sys.argv[1]

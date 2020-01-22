@@ -12,7 +12,7 @@ python-gtk
 ## launch
 
 ```sh
-python ./fluxboxlauncher.py USERNAME
+./fluxboxlauncher.py USERNAME
 ```
 
 ## i18n
@@ -38,7 +38,7 @@ msgfmt -o locale/fr/LC_MESSAGES/fluxboxlauncher.mo locale/fr/LC_MESSAGES/fluxbox
 ## Tests
 
 ```sh
-python3 -m unittest tests/tests.py
+python3 -m unittest flxl/tests/tests.py
 ```
 
 ## Create a Debian package
@@ -49,9 +49,29 @@ cd fluxboxlauncher
 dpkg-buildpackage -us -uc
 ```
 
-and use it :
+and launch with :
 
 ```sh
-sudo dpkg -i /path/to/deb/file
-sudo apt-get install -f
+sudo dpkg -i ../fluxboxlauncher_*_all.deb
 ```
+
+## Create a Nix package
+
+```sh
+nix-build
+```
+
+launch local :
+
+```sh
+nix run -c fluxboxlauncher
+```
+
+launch after build :
+
+```sh
+nix-shell --run fluxboxlauncher
+```
+ 
+ 
+>>>>>>> master

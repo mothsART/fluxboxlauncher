@@ -3,7 +3,7 @@ from os.path import dirname, join, exists
 
 local_path = join(dirname(dirname(__file__)), 'locale')
 if not exists(local_path):
-    local_path = '/usr/share/locale';
+    local_path = '/usr/share/locale'
 
 gettext.bindtextdomain('fluxboxlauncher', local_path)
 gettext.textdomain('fluxboxlauncher')

@@ -1,6 +1,11 @@
 *.pyc
 
-debian/handymenu
+build
+fluxboxlauncher.egg-info/
+result
+
+debian/files
+debian/fluxboxlauncher
 debian/debhelper-build-stamp
-debian/handymenu.debhelper.log
-debian/handymenu.substvars
+debian/fluxboxlauncher.debhelper.log
+debian/fluxboxlauncher.substvars

@@ -1,19 +1,19 @@
-fluxboxlauncher                           usr/bin
-fluxboxlauncher_mini                      usr/bin
-fluxboxlauncher_super                     usr/bin
-fluxboxlauncher_maxi                      usr/bin
+fluxboxlauncher                                usr/bin
+fluxboxlauncher_mini                           usr/bin
+fluxboxlauncher_super                          usr/bin
+fluxboxlauncher_maxi                           usr/bin
 
-fluxboxlauncher.py                        usr/lib/python3/dist-packages/fluxboxlauncher
-lib/*.py                                  usr/lib/python3/dist-packages/fluxboxlauncher/lib
+flxl/*.py                                      usr/lib/python3/dist-packages/flxl
+flxl/lib/*.py                                  usr/lib/python3/dist-packages/flxl/lib
 
-fluxboxlauncher.svg                       usr/share/icons/hicolor/scalable/apps
-fluxboxlauncher_mini.svg                  usr/share/icons/hicolor/scalable/apps
-fluxboxlauncher_maxi.svg                  usr/share/icons/hicolor/scalable/apps
-fluxboxlauncher_super.svg                 usr/share/icons/hicolor/scalable/apps
+fluxboxlauncher.svg                            usr/share/icons/hicolor/scalable/apps
+fluxboxlauncher_mini.svg                       usr/share/icons/hicolor/scalable/apps
+fluxboxlauncher_maxi.svg                       usr/share/icons/hicolor/scalable/apps
+fluxboxlauncher_super.svg                      usr/share/icons/hicolor/scalable/apps
 
-locale/fr/LC_MESSAGES/fluxboxlauncher.mo  usr/share/locale/fr/LC_MESSAGES
+flxl/locale/fr/LC_MESSAGES/fluxboxlauncher.mo  usr/share/locale/fr/LC_MESSAGES
 
-debian/fluxboxlauncher.desktop            usr/share/applications
-debian/fluxboxlauncher_mini.desktop       usr/share/applications
-debian/fluxboxlauncher_maxi.desktop       usr/share/applications
-debian/fluxboxlauncher_super.desktop      usr/share/applications
+debian/fluxboxlauncher.desktop                 usr/share/applications
+debian/fluxboxlauncher_mini.desktop            usr/share/applications
+debian/fluxboxlauncher_maxi.desktop            usr/share/applications
+debian/fluxboxlauncher_super.desktop           usr/share/applications

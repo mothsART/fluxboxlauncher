@@ -1,3 +1,8 @@
-#!/bin/sh
+#!/usr/bin/python3
 
-python /usr/lib/python3/dist-packages/fluxboxlauncher/fluxboxlauncher.py `whoami`
+import sys
+
+from flxl.main import main
+
+if __name__ == "__main__":
+    main()
