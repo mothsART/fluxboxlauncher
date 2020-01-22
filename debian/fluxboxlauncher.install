@@ -13,7 +13,7 @@ fluxboxlauncher_super.svg                      usr/share/icons/hicolor/scalable/
 
 flxl/locale/fr/LC_MESSAGES/fluxboxlauncher.mo  usr/share/locale/fr/LC_MESSAGES
 
-debian/fluxboxlauncher.desktop                 usr/share/applications
+fluxboxlauncher.desktop                        usr/share/applications
 debian/fluxboxlauncher_mini.desktop            usr/share/applications
 debian/fluxboxlauncher_maxi.desktop            usr/share/applications
 debian/fluxboxlauncher_super.desktop           usr/share/applications
