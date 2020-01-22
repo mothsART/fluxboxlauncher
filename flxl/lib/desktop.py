@@ -1,10 +1,12 @@
 import os
 import locale
-lang = locale.getlocale()[0]
+global_lang = locale.getlocale()[0]
 
 
-def get_info(desktopfile):
+def get_info(desktopfile, lang=None):
     """return infos from a .desktop file"""
+    if not lang:
+        lang = global_lang
     name, cmd, icon, generic= "", "", "", ""
     nameloc = False
     geneloc = False
