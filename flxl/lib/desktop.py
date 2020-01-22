@@ -1,5 +1,6 @@
 import os
 import locale
+lang = locale.getlocale()[0]
 
 
 def get_info(desktopfile):
@@ -7,7 +8,7 @@ def get_info(desktopfile):
     name, cmd, icon, generic= "", "", "", ""
     nameloc = False
     geneloc = False
-    lang = locale.setlocale(locale.LC_ALL, "")[0:2]
+
     with open(desktopfile, 'r') as d:
         df = d.readlines()
     for l in df:

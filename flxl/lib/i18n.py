@@ -5,8 +5,6 @@ local_path = join(dirname(dirname(__file__)), 'locale')
 if not exists(local_path):
     local_path = '/usr/share/locale'
 
-print(local_path)
-
 gettext.bindtextdomain('fluxboxlauncher', local_path)
 gettext.textdomain('fluxboxlauncher')
 _ = gettext.gettext

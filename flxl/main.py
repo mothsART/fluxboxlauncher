@@ -42,7 +42,7 @@ def gtk_style():
 class FluxBoxLauncherWindow(Gtk.Window):
     ICONSIZE = 32
 
-    def del_soft(self, conf, soft, hbox, vbox):
+    def del_soft(self, conf, soft, hbox, vbox, hbox_header=None):
         confirm = ConfirmDialog(
             self,
             _confirmation,
@@ -56,6 +56,8 @@ class FluxBoxLauncherWindow(Gtk.Window):
         conf.remove(soft)
         conf.save()
         vbox.remove(hbox)
+        if hbox_header and not conf.softs:
+            vbox.remove(hbox_header)
 
     def on_checked(self, widget, soft, conf):
         if widget.get_active():
@@ -67,7 +69,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
         conf.save()
 
     def _add_soft(self, conf, soft, vbox, hbox_header=None):
-        if hbox_header:
+        if hbox_header and conf.softs:
             vbox.remove(hbox_header)
         hbox = Gtk.HBox(homogeneous=False, margin=5)
 
@@ -81,9 +83,9 @@ class FluxBoxLauncherWindow(Gtk.Window):
             conf,
             soft,
             hbox,
-            vbox
+            vbox,
+            hbox_header
         )
-
         img = Gtk.Image(margin=5)
         if (
             soft.icon != None
@@ -129,8 +131,8 @@ class FluxBoxLauncherWindow(Gtk.Window):
         selection, target_type, timestamp,
         conf, vbox, hbox_header
     ):
-        data = selection.get_data().strip().replace('%20', ' ')
-        f = data.replace("file://", "").strip()
+        data = selection.get_data().strip().replace(b'%20', b' ')
+        f = data.replace(b"file://", b"").strip()
         if not os.path.isfile(f):
             return
         soft = Soft(*get_info(f))
@@ -186,6 +188,9 @@ class FluxBoxLauncherWindow(Gtk.Window):
             self,
             title = 'Fluxbox Launcher'
         )
+        conf.open()
+        conf.save()
+
         self.set_border_width(5)
 
         vbox = Gtk.VBox(homogeneous=False)
@@ -252,15 +257,13 @@ class FluxBoxLauncherWindow(Gtk.Window):
         h.pack_start(drag_vbox, True, True, False)
         vbox.pack_start(h, True, True, False)
 
-        conf.open()
-        conf.save()
-
         for soft in conf.softs:
             self._add_soft(conf, soft, vbox)
 
         # activate header
-        vbox.pack_end(hbox_header, False, False, False)
-        
+        if conf.softs:
+            vbox.pack_end(hbox_header, False, False, False)
+
         swin = Gtk.ScrolledWindow()
         swin.add_with_viewport(vbox)
         self.add(swin)
