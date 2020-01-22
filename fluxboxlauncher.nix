@@ -7,6 +7,7 @@
 , gettext
 , pango
 , gdk-pixbuf
+, locale
 , atk
 }:
 
@@ -34,6 +35,11 @@ python3.pkgs.buildPythonApplication rec {
   propagatedBuildInputs = with python3.pkgs; [
     pygobject3
   ];
+
+    postPatch = ''
+    substituteInPlace flxl/lib/i18n.py \
+      --replace "/usr" "$out"
+  '';
 
   meta = with lib; {
     description = "Fluxboxlauncher";

@@ -1,10 +1,10 @@
-fluxboxlauncher                           usr/bin
+fluxboxlauncher                                usr/bin
 
-flxl/*.py                                 usr/lib/python3/dist-packages/flxl
-flxl/lib/*.py                             usr/lib/python3/dist-packages/flxl/lib
+flxl/*.py                                      usr/lib/python3/dist-packages/flxl
+flxl/lib/*.py                                  usr/lib/python3/dist-packages/flxl/lib
 
-fluxboxlauncher.svg                       usr/share/icons/hicolor/scalable/apps
+fluxboxlauncher.svg                            usr/share/icons/hicolor/scalable/apps
 
-locale/fr/LC_MESSAGES/fluxboxlauncher.mo  usr/share/locale/fr/LC_MESSAGES
+flxl/locale/fr/LC_MESSAGES/fluxboxlauncher.mo  usr/share/locale/fr/LC_MESSAGES
 
-fluxboxlauncher.desktop                   usr/share/applications
+fluxboxlauncher.desktop                        usr/share/applications

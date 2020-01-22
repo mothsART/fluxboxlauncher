@@ -6,8 +6,8 @@ from setuptools import setup
 
 GETTEXT_NAME="apturl"
 I18NFILES = []
-for filepath in glob.glob("locale/*/LC_MESSAGES/*.mo"):
-    lang = filepath[len("locale/"):]
+for filepath in glob.glob("flxl/locale/*/LC_MESSAGES/*.mo"):
+    lang = filepath[len("flxl/locale/"):]
     targetpath = os.path.dirname(os.path.join("share/locale", lang))
     I18NFILES.append((targetpath, [filepath]))
 
