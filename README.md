@@ -61,17 +61,15 @@ sudo dpkg -i ../fluxboxlauncher_*_all.deb
 nix-build
 ```
 
-launch local :
+install locally :
+
+```sh
+nix-env -i f .
+```
+
+launch locally :
 
 ```sh
 nix run -c fluxboxlauncher
 ```
 
-launch after build :
-
-```sh
-nix-shell --run fluxboxlauncher
-```
- 
- 
->>>>>>> master
