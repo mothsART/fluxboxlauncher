@@ -55,7 +55,6 @@ and launch with :
 sudo dpkg -i ../fluxboxlauncher_*_all.deb
 ```
 
-
 ## Create a Nix package
 
 ```sh
@@ -65,7 +64,7 @@ nix-build
 install locally :
 
 ```sh
-nix-env -i f .
+nix-env -if .
 ```
 
 launch locally :

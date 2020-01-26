@@ -31,19 +31,17 @@ python3.pkgs.buildPythonApplication rec {
     python3
   ];
 
+  makeWrapperArgs = [ "--set LOCALE_ARCHIVE ${glibcLocales}/lib/locale/locale-archive"
+                      "--set CHARSET en_us.UTF-8" ];
+
   propagatedBuildInputs = with python3.pkgs; [
     pygobject3
   ];
 
-    postPatch = ''
-    substituteInPlace flxl/lib/i18n.py \
-      --replace "/usr" "$out"
-  '';
-
   meta = with lib; {
     description = "Fluxboxlauncher";
     homepage = "https://github.com/mothsART/fluxboxlauncher";
-    maintainers = with maintainers; [ mothsart ];
+    maintainers = with maintainers; [ "mothsart" ];
     license = licenses.bsdOriginal;
     platforms = platforms.unix;
   };

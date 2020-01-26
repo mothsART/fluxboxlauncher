@@ -2,7 +2,6 @@ import os
 import locale
 global_lang = locale.getlocale()[0]
 
-
 def get_info(desktopfile, lang=None):
     """return infos from a .desktop file"""
     if not lang:

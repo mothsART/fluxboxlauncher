@@ -1,6 +1,7 @@
 import os
 from os.path import join, exists
 
+from .debug import is_debug_mode
 from .soft import Soft
 from .desktop import get_info
 
@@ -12,7 +13,7 @@ class Conf:
         self.last_lines = []
         self.DEBUG = False
         self.start_path = 'startup'
-        if os.path.isdir('.git'):
+        if is_debug_mode():
             self.DEBUG = True
         dirname = "/home/%s/.fluxbox/" % user
         if not os.path.isdir(dirname):

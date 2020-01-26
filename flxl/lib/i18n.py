@@ -1,11 +1,16 @@
 import gettext
 from os.path import dirname, join, exists
+import sys
 
-local_path = join(dirname(dirname(__file__)), 'locale')
-if not exists(local_path):
-    local_path = '/usr/share/locale'
+from .debug import is_debug_mode
 
-gettext.bindtextdomain('fluxboxlauncher', local_path)
+if is_debug_mode():
+    LOCAL_PATH = join(dirname(dirname(__file__)), 'locale')
+else:
+    d = dirname(sys.modules["flxl"].__file__)
+    LOCAL_PATH = join(d, '..', '..', '..', '..', 'share', 'locale')
+
+gettext.bindtextdomain('fluxboxlauncher', LOCAL_PATH)
 gettext.textdomain('fluxboxlauncher')
 _ = gettext.gettext
 
