@@ -4,6 +4,8 @@ import os
 import glob
 from setuptools import setup
 
+from flxl import __version__
+
 I18NFILES = []
 for filepath in glob.glob("flxl/locale/*/LC_MESSAGES/*.mo"):
     lang = filepath[len("flxl/locale/"):]
@@ -12,9 +14,9 @@ for filepath in glob.glob("flxl/locale/*/LC_MESSAGES/*.mo"):
 
 setup(
     name='fluxboxlauncher',
-    version=0.1,
+    version=__version__,
     description=(
-        '...'
+        'A Gui editor (gtk) to configure applications launching on a fluxbox session'
     ),
     author='mothsart',
     author_email='ferryjeremie@free.fr',
