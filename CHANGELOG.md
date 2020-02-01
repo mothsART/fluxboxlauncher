@@ -15,6 +15,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - search name and icon (data in .desktop file) corresponding
 - unit tests on locales and gettext
 
+## [0.2.x]
+### Bugfix
+
+- Parse .desktop files with absolute icon path
+
 ## [0.2]
 ### Added
 

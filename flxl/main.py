@@ -4,7 +4,7 @@ import sys
 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, Gdk, GdkPixbuf
 
 from .lib.desktop import get_info
 from .lib.soft import Soft
@@ -95,13 +95,11 @@ class FluxBoxLauncherWindow(Gtk.Window):
                 or soft.icon.endswith('.jpg')
             )
         ):
-            pixbuf = Gtk.gdk.pixbuf_new_from_file_at_size(
-                soft.icon,
-                self.ICONSIZE, self.ICONSIZE
-            )
+            pixbuf = GdkPixbuf.Pixbuf.new_from_file(soft.icon)
             scaled_buf = pixbuf.scale_simple(
-                self.ICONSIZE, self.ICONSIZE,
-                Gtk.gdk.INTERP_BILINEAR
+                self.ICONSIZE,
+                self.ICONSIZE,
+                GdkPixbuf.InterpType.BILINEAR
             )
             img.set_from_pixbuf(scaled_buf)
         elif soft.icon != None:
