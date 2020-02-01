@@ -36,7 +36,9 @@ def get_info(desktopfile, lang=None):
             cmd = l.replace('Exec=', '').strip()
             cmd = cmd.split('%')[0].strip()
         if icon == "" and l.startswith('Icon='):
-            icon = os.path.splitext(
-                l.replace('Icon=', '').strip()
-            )[0]
+            icon = l.replace('Icon=', '').strip()
+            if not os.path.exists(icon):
+                icon = os.path.splitext(
+                    icon
+                )[0]
     return name, cmd, icon, generic
