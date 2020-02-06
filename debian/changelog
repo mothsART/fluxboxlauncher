@@ -1,3 +1,17 @@
+fluxboxlauncher (0.2.1) bionic; urgency=medium
+
+  * move rox utils to GtkAppChooserDialog
+
+ -- Jérémie Ferry <jerem.ferry@gmail.com> Thi, 6 Feb 2020 20:38:10 +0100
+
+fluxboxlauncher (0.2) bionic; urgency=medium
+
+  * add a command line editor and test it
+  * search name and icon (data in .desktop file) corresponding
+  * unit tests on locales and gettext
+
+ -- Jérémie Ferry <jerem.ferry@gmail.com> Sat, 26 Jan 2020 13:34:10 +0100
+
 fluxboxlauncher (0.1) bionic; urgency=medium
 
   * Initial release

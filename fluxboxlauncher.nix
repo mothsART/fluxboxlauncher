@@ -12,7 +12,7 @@
 
 python3.pkgs.buildPythonApplication rec {
   pname = "fluxboxlauncher";
-  version = "0.1";
+  version = "0.2.1";
 
   src = lib.cleanSource ./.;
 
