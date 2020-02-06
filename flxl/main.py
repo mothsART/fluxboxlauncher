@@ -148,8 +148,40 @@ class FluxBoxLauncherWindow(Gtk.Window):
         conf.add(soft)
         conf.save()
 
-    def appfinder(self, widget=None, event=None):
-        os.system('rox /usr/share/applications &')
+    def appfinder(self, widget, event, conf, vbox, hbox_header):
+        dialog = Gtk.AppChooserDialog(
+            parent=self,
+            content_type="image/png"
+        )
+        dialog.set_heading(_search)
+        dialog.connect("response", self.on_response, conf, vbox, hbox_header)
+        dialog.run()
+
+    def on_response(self, dialog, response, conf, vbox, hbox_header):
+        if response != Gtk.ResponseType.OK:
+            return
+        app_info = dialog.get_app_info()
+
+        name = app_info.get_display_name()
+        generic = app_info.get_generic_name()
+        description = app_info.get_description()
+
+        soft = Soft(*get_info(app_info.get_filename()))
+        if conf.soft_exist(soft):
+            dialog.destroy()
+            confirmWarning = WarningDialog(
+                self,
+                _duplicate,
+                _app_already_exists
+            )
+            confirmWarning.run()
+            confirmWarning.destroy()
+            return
+        self._add_soft(conf, soft, vbox, hbox_header)
+        vbox.show_all()
+        conf.add(soft)
+        conf.save()
+        dialog.destroy()
 
     def add_cmd(self, widget, event, conf, vbox, hbox_header):
         confirm = CmdLineDialog(
@@ -242,7 +274,11 @@ class FluxBoxLauncherWindow(Gtk.Window):
         addi = Gtk.Image()
         addi.set_from_stock(Gtk.STOCK_FIND, Gtk.IconSize.MENU)
         appfinderbtn.set_image(addi)
-        appfinderbtn.connect("button_press_event", self.appfinder)
+        appfinderbtn.connect(
+            "button_press_event",
+            self.appfinder,
+            conf, vbox, hbox_header
+        )
         horizontal_header.pack_start(appfinderbtn, True, True, False)
         vbox.pack_start(horizontal_header, True, True, False)
 
