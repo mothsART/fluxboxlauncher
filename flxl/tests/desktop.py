@@ -24,5 +24,5 @@ class TestDesktop(TestCase):
         name, cmd, icon, generic = get_info('magicolorgrid.desktop', 'fr_FR')
         assert name == 'MagicolorGrid en français'
         assert cmd == 'magicolorgrid'
-        assert icon == '/usr/share/applications/magicolorgrid/favicon.png'
+        assert icon == '/usr/share/applications/magicolorgrid/favicon'
         assert generic == ''
