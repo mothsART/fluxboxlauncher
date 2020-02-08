@@ -2,7 +2,7 @@ fluxboxlauncher (0.2.1) bionic; urgency=medium
 
   * move rox utils to GtkAppChooserDialog
 
- -- Jérémie Ferry <jerem.ferry@gmail.com> Thi, 6 Feb 2020 20:38:10 +0100
+ -- Jérémie Ferry <jerem.ferry@gmail.com> Thu, 06 Feb 2020 20:38:10 +0100
 
 fluxboxlauncher (0.2) bionic; urgency=medium
 
