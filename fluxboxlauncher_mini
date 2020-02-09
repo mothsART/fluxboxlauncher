@@ -1,3 +1,3 @@
 #!/bin/sh
 
-/usr/bin/fluxboxlauncher 01-mini
+python3 /usr/lib/python3/dist-packages/fluxboxlauncher/fluxboxlauncher.py 01-mini

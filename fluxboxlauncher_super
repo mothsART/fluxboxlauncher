@@ -1,3 +1,3 @@
 #!/bin/sh
 
-/usr/bin/fluxboxlauncher 02-super
+python3 /usr/lib/python3/dist-packages/fluxboxlauncher/fluxboxlauncher.py 02-super
