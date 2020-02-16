@@ -1,11 +1,13 @@
 *.pyc
 
 build
-fluxboxlauncher.egg-info/
+*.egg-info/
 result
 
+.zcache
+
 debian/files
-debian/fluxboxlauncher
+debian/*
 debian/debhelper-build-stamp
-debian/fluxboxlauncher.debhelper.log
-debian/fluxboxlauncher.substvars
+debian/*.debhelper
+debian/*.substvars

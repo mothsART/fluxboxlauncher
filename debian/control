@@ -1,13 +1,11 @@
 Source: fluxboxlauncher
 Section: education
-Version: 0.2.2
 Priority: extra
 Maintainer: Ferry Jérémie <ferryjeremie@free.fr>
 Build-Depends: debhelper (>= 9), python3-dev
 
 Package: fluxboxlauncher
-Version: 0.2.2
 Architecture: all
-Maintainer: Ferry Jérémie <ferryjeremie@free.fr>
-Depends: ${python3:Depends}, python3-gi, rox-filer, ${misc:Depends}
-Description: Gérer les applications au lancement de FluxBox
+Depends: ${python3:Depends}, python3-gi, ${misc:Depends}
+Description: Manage application startup when FluxBox is launched :
+    FluxBoxlauncher is a graphical application with drag-and-drop functionality.
