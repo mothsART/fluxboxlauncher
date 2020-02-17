@@ -216,7 +216,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
             print('DEBUG MODE')
         Gtk.Window.__init__(
             self,
-            title = 'Fluxbox Launcher'
+            title = 'Fluxbox Launcher : session %s' % conf.user
         )
         conf.open()
         conf.save()

@@ -1,15 +1,14 @@
 [Desktop Entry]
-Version=0.2.3
+Version=0.3.3
 Exec=fluxboxlauncher
 Icon=fluxboxlauncher
 Terminal=false
 Type=Application
 Categories=Misc;
-Keywords=fluxbox;
+Keywords=fluxbox;start;init;app;admin;teach;session;
+Name=FluxboxLauncher : Teacher session
+Comment=Manage application startup when FluxBox is launched at Teacher session : FluxBoxlauncher is a graphical application with drag-and-drop functionality.
 
-Name=FluxboxLauncher
-Comment=Manage application startup when FluxBox is launched :
-FluxBoxlauncher is a graphical application with drag-and-drop functionality.
-Name[fr]=FluxboxLauncher
-Comment[fr]=Gérez le démarrage d'applications au lancement de FluxBox:
-FluxBoxLauncher est une interface graphique avec des fonctionnalités de glissé/déposé
+Keywords[fr]=fluxbox;start;lancement;init;app;admin;prof;session;
+Name[fr]=FluxboxLauncher : session Prof
+Comment[fr]=Gérez le démarrage d'applications au lancement de FluxBox session Prof : FluxBoxLauncher est une interface graphique avec des fonctionnalités de glissé/déposé.

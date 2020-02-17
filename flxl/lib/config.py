@@ -14,6 +14,12 @@ class Conf:
         self.start_path = 'startup'
         if os.path.isdir('.git'):
             self.DEBUG = True
+        if not user:
+            user = 'prof'
+        self.user = user.replace('01-', '') \
+            .replace('02-', '') \
+            .replace('03-', '') \
+            .capitalize()
         dirname = "/home/%s/.fluxbox/" % user
         if not os.path.isdir(dirname):
             return

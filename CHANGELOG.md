@@ -14,7 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - add a command line editor and test it
 - search name and icon (data in .desktop file) corresponding
 
-## [0.2.3]
+## [0.3.3]
 ### Bugfix
 
 - Chaining command line with "&&" is now possible

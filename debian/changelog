@@ -1,4 +1,4 @@
-fluxboxlauncher (0.2.3) bionic; urgency=medium
+fluxboxlauncher (0.3.3) bionic; urgency=medium
   * Chaining command line with "&&" is now possible
 
  -- jferry <jerem.ferry@gmail.com>  Sun, 16 Feb 2020 18:02:10 +0100
