@@ -1,13 +1,14 @@
 [Desktop Entry]
-Version=0.1
+Version=0.2.3
 Exec=fluxboxlauncher_maxi
 Icon=fluxboxlauncher_maxi
 Terminal=false
 Type=Application
 Categories=Misc;
-Keywords=fluxbox;
+Keywords=fluxbox;start;init;app;maxi;session;
+Name=FluxboxLauncher : Maxi session
+Comment=Manage application startup when FluxBox is launched at Maxi session : FluxBoxlauncher is a graphical application with drag-and-drop functionality.
 
-Name=FluxboxLauncher
-Comment=Manage starting applications on Fluxbox.
-Name[fr]=FluxboxLauncher
-Comment[fr]=Gérer les applications de la session maxi au lancement de Fluxbox.
+Keywords[fr]=fluxbox;start;lancement;init;app;maxi;session;
+Name[fr]=FluxboxLauncher : session Maxi
+Comment[fr]=Gérez le démarrage d'applications au lancement de FluxBox session Maxi : FluxBoxLauncher est une interface graphique avec des fonctionnalités de glissé/déposé.
