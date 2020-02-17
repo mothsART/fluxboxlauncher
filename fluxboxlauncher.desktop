@@ -1,13 +1,13 @@
 [Desktop Entry]
-Version=0.2.2
+Version=0.2.3
 Exec=fluxboxlauncher
 Icon=fluxboxlauncher
 Terminal=false
 Type=Application
 Categories=Misc;
-Keywords=fluxbox;
-
+Keywords=fluxbox;start;init;app;session;
 Name=FluxboxLauncher
-Comment=Manage starting applications on Fluxbox.
-Name[fr]=FluxboxLauncher
-Comment[fr]=Gérer les applications au lancement de Fluxbox.
+Comment=Manage application startup when FluxBox is launched : FluxBoxlauncher is a graphical application with drag-and-drop functionality.
+
+Keywords[fr]=fluxbox;start;lancement;init;app;session;
+Comment[fr]=Gérez le démarrage d'applications au lancement de FluxBox : FluxBoxLauncher est une interface graphique avec des fonctionnalités de glissé/déposé.

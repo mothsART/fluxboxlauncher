@@ -5,6 +5,11 @@
 [![Build Status](https://travis-ci.org/mothsART/fluxboxlauncher.png?branch=master)](https://travis-ci.org/mothsART/fluxboxlauncher)
 [![LICENSE](https://img.shields.io/badge/license-BSD-blue.svg)](LICENSE)
 
+## Introduction
+
+Manage application startup when FluxBox is launched :
+FluxBoxlauncher is a graphical application with drag-and-drop functionality.
+   
 ## Dependances
 
 python-gtk

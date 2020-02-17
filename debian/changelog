@@ -1,13 +1,19 @@
-fluxboxlauncher (0.2.2) bionic; urgency=medium
+fluxboxlauncher (0.2.3) bionic; urgency=medium
+  * Chaining command line with "&&" is now possible
 
+ -- jferry <jerem.ferry@gmail.com>  Sun, 16 Feb 2020 18:02:10 +0100
+
+fluxboxlauncher (0.2.2) bionic; urgency=medium
   * resolve debian package
 
+ -- Jérémie Ferry <jerem.ferry@gmail.com>  Sat, 08 Feb 2020 23:52:10 +0100
 
 fluxboxlauncher (0.2.1) bionic; urgency=medium
 
   * move rox utils to GtkAppChooserDialog
+  * Parse .desktop files with absolute icon path
 
- -- Jérémie Ferry <jerem.ferry@gmail.com> Thu, 06 Feb 2020 20:38:10 +0100
+ -- Jérémie Ferry <jerem.ferry@gmail.com>  Thu, 06 Feb 2020 20:38:10 +0100
 
 fluxboxlauncher (0.2) bionic; urgency=medium
 
@@ -15,10 +21,10 @@ fluxboxlauncher (0.2) bionic; urgency=medium
   * search name and icon (data in .desktop file) corresponding
   * unit tests on locales and gettext
 
- -- Jérémie Ferry <jerem.ferry@gmail.com> Sat, 26 Jan 2020 13:34:10 +0100
+ -- Jérémie Ferry <jerem.ferry@gmail.com>  Sat, 26 Jan 2020 13:34:10 +0100
 
 fluxboxlauncher (0.1) bionic; urgency=medium
 
   * Initial release
 
- -- Jérémie Ferry <jerem.ferry@gmail.com> Wed, 21 Nov 2018 23:50:10 +0100
+ -- Jérémie Ferry <jerem.ferry@gmail.com>  Wed, 21 Nov 2018 23:50:10 +0100

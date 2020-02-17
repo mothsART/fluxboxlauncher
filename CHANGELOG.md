@@ -15,9 +15,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - search name and icon (data in .desktop file) corresponding
 - unit tests on locales and gettext
 
-## [0.2.x]
+## [0.2.3]
 ### Bugfix
 
+- Chaining command line with "&&" is now possible
+
+## [0.2.2]
+### Bugfix
+- Resolve debian package
+
+## [0.2.1]
+### Bugfix
+
+- move rox utils to GtkAppChooserDialog
 - Parse .desktop files with absolute icon path
 
 ## [0.2]

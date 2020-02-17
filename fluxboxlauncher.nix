@@ -12,7 +12,7 @@
 
 python3.pkgs.buildPythonApplication rec {
   pname = "fluxboxlauncher";
-  version = "0.2.2";
+  version = "0.2.3";
 
   src = lib.cleanSource ./.;
 
@@ -39,7 +39,7 @@ python3.pkgs.buildPythonApplication rec {
   ];
 
   meta = with lib; {
-    description = "Fluxboxlauncher";
+    description = "Manage application startup when FluxBox is launched : ${pname} is a graphical application with drag-and-drop functionality.";
     homepage = "https://github.com/mothsART/fluxboxlauncher";
     maintainers = with maintainers; [ "mothsart" ];
     license = licenses.bsdOriginal;

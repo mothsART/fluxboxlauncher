@@ -57,10 +57,14 @@ class Conf:
                 continue
             cmd = None
             if line.startswith('exec '):
-                cmd = line.replace('exec ', '').replace(' &', '').strip()
+                cmd = line.replace('exec ', '').strip()
+                if cmd.endswith(' &'):
+                    cmd = cmd[:-2]
                 new_soft = self._new_soft(cmd, False)
             elif line.startswith('# exec '):
-                cmd = line.replace('#', '').replace('exec ', '').replace('&', '').strip()
+                cmd = line.replace('#', '').replace('exec ', '').strip()
+                if cmd.endswith(' &'):
+                    cmd = cmd[:-2]
                 new_soft = self._new_soft(cmd, True)
             else:
                 self.first_lines.append(line)
