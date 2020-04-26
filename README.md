@@ -9,7 +9,13 @@
 
 Manage application startup when FluxBox is launched :
 FluxBoxlauncher is a graphical application with drag-and-drop functionality.
-   
+
+### Last stable version
+
+[![Packaging status](https://repology.org/badge/vertical-allrepos/fluxboxlauncher.svg)](https://repology.org/project/fluxboxlauncher/versions)
+
+- Ubuntu 18.04, 19.10 and 20.04: [PPA](https://launchpad.net/~jerem-ferry/+archive/ubuntu/fluxbox)
+
 ## Dependances
 
 python-gtk
