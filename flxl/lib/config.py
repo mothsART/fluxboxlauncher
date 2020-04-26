@@ -1,9 +1,8 @@
-import os
-from os.path import join, exists
+from os.path import exists, isdir, isfile, join
 
 from .debug import is_debug_mode
-from .soft import Soft
 from .desktop import get_info
+from .soft import Soft
 
 
 class Conf:
@@ -16,8 +15,8 @@ class Conf:
         self.start_path = 'startup'
         if is_debug_mode():
             self.DEBUG = True
-        dirname = "/home/%s/.fluxbox/" % user
-        if not os.path.isdir(dirname):
+        dirname = '/home/%s/.fluxbox/' % user
+        if not isdir(dirname):
             return
         self.start_path = dirname + 'startup'
 
@@ -76,9 +75,9 @@ class Conf:
                     continue
             self.softs.append(new_soft)
 
-    def open(self):
+    def read(self):
         """Open conf files"""
-        if not os.path.isfile(self.start_path):
+        if not isfile(self.start_path):
             return False
         with open(self.start_path, 'r') as f:
             self.load(f.readlines())
@@ -86,7 +85,7 @@ class Conf:
 
     def save(self):
         """Save conf files"""
-        if not os.path.isfile(self.start_path):
+        if not isfile(self.start_path):
             return False
         with open(self.start_path, 'w') as f:
             f.write(str(self))

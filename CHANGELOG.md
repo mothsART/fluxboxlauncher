@@ -15,7 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - add a command line editor and test it
 - search name and icon (data in .desktop file) corresponding
 - unit tests on locales and gettext
-- flake8
+- flake8 (and 'flake8-builtins', 'flake8-import-order', 'flake8-quotes')
+
 
 ## [0.2.3]
 ### Bugfix

@@ -1,19 +1,19 @@
-from .lib.desktop import get_info
-from .lib.soft import Soft
-from .lib.dialog import ConfirmDialog, WarningDialog, CmdLineDialog
-from .lib.config import Conf
-from .lib.i18n import (
-    _duplicate, _app_already_exists,
-    _confirmation, _confirm_question,
-    _drag, _search, _activate,
-    _add_cmd_line
-)
-
 import os
 import sys
 
 import gi
-from gi.repository import Gtk, Gdk, GdkPixbuf
+from gi.repository import Gdk, GdkPixbuf, Gtk
+
+from .lib.config import Conf
+from .lib.desktop import get_info
+from .lib.dialog import CmdLineDialog, ConfirmDialog, WarningDialog
+from .lib.i18n import (
+    _activate, _add_cmd_line, _app_already_exists,
+    _confirm_question, _confirmation,
+    _drag, _duplicate, _search
+)
+from .lib.soft import Soft
+
 gi.require_version('Gtk', '3.0')
 
 
@@ -78,7 +78,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
         deli.set_from_stock(Gtk.STOCK_DELETE, Gtk.IconSize.MENU)
         delbtn.set_image(deli)
         delbtn.connect_object(
-            "clicked",
+            'clicked',
             self.del_soft,
             conf,
             soft,
@@ -110,7 +110,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
         activateButton = Gtk.CheckButton(margin=5)
         activateButton.set_active(not soft.disabled)
         activateButton.connect(
-            "toggled",
+            'toggled',
             self.on_checked,
             soft,
             conf
@@ -130,7 +130,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
         conf, vbox, hbox_header
     ):
         data = selection.get_data().strip().replace(b'%20', b' ')
-        f = data.replace(b"file://", b"").strip()
+        f = data.replace(b'file://', b'').strip()
         if not os.path.isfile(f):
             return
         soft = Soft(*get_info(f))
@@ -151,10 +151,12 @@ class FluxBoxLauncherWindow(Gtk.Window):
     def appfinder(self, widget, event, conf, vbox, hbox_header):
         dialog = Gtk.AppChooserDialog(
             parent=self,
-            content_type="image/png"
+            content_type='image/png'
         )
         dialog.set_heading(_search)
-        dialog.connect("response", self.on_response, conf, vbox, hbox_header)
+        dialog.connect(
+            'response', self.on_response, conf, vbox, hbox_header
+        )
         dialog.run()
 
     def on_response(self, dialog, response, conf, vbox, hbox_header):
@@ -213,7 +215,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
             self,
             title='Fluxbox Launcher'
         )
-        conf.open()
+        conf.read()
         conf.save()
 
         self.set_border_width(5)
@@ -237,9 +239,9 @@ class FluxBoxLauncherWindow(Gtk.Window):
             dnd_list,
             Gdk.DragAction.COPY
         )
-        h.set_property("height-request", 200)
+        h.set_property('height-request', 200)
         h.connect(
-            "drag-data-received",
+            'drag-data-received',
             self.on_drag_data_received,
             conf, vbox, hbox_header
         )
@@ -252,7 +254,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
             margin=10
         )
         cmd_btn.connect(
-            "button_press_event",
+            'button_press_event',
             self.add_cmd,
             conf, vbox, hbox_header
         )
@@ -270,7 +272,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
         addi.set_from_stock(Gtk.STOCK_FIND, Gtk.IconSize.MENU)
         appfinderbtn.set_image(addi)
         appfinderbtn.connect(
-            "button_press_event",
+            'button_press_event',
             self.appfinder,
             conf, vbox, hbox_header
         )
@@ -306,7 +308,7 @@ def main():
         user = sys.argv[1]
     gtk_style()
     win = FluxBoxLauncherWindow(Conf(user))
-    win.connect("destroy", Gtk.main_quit)
+    win.connect('destroy', Gtk.main_quit)
     win.show_all()
     Gtk.main()
     exit(0)

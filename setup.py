@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
 
-import os
 import glob
-from setuptools import setup
+import os
 
 from flxl import __version__
 
+from setuptools import setup
+
 I18NFILES = []
-for filepath in glob.glob("flxl/locale/*/LC_MESSAGES/*.mo"):
-    lang = filepath[len("flxl/locale/"):]
-    targetpath = os.path.dirname(os.path.join("share/locale", lang))
+for filepath in glob.glob('flxl/locale/*/LC_MESSAGES/*.mo'):
+    lang = filepath[len('flxl/locale/'):]
+    targetpath = os.path.dirname(os.path.join('share/locale', lang))
     I18NFILES.append((targetpath, [filepath]))
 
 setup(

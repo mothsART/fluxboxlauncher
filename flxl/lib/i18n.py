@@ -1,13 +1,13 @@
 import gettext
-from os.path import dirname, join
 import sys
+from os.path import dirname, join
 
 from .debug import is_debug_mode
 
 if is_debug_mode():
     LOCAL_PATH = join(dirname(dirname(__file__)), 'locale')
 else:
-    d = dirname(sys.modules["flxl"].__file__)
+    d = dirname(sys.modules['flxl'].__file__)
     LOCAL_PATH = join(d, '..', '..', '..', '..', 'share', 'locale')
 
 gettext.bindtextdomain('fluxboxlauncher', LOCAL_PATH)
@@ -22,9 +22,9 @@ _confirm_question = _(
     'Do you really want to delete this app from Fluxbox launch ?'
 )
 
-_drag = _("Drag an application here to create a launcher")
-_search = _("Search an application")
+_drag = _('Drag an application here to create a launcher')
+_search = _('Search an application')
 
-_activate = _("activate ?")
+_activate = _('activate ?')
 
 _add_cmd_line = _('Add command line')
