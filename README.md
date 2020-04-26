@@ -1,9 +1,15 @@
-<img src="./ressources/logo.svg" alt="Fluxboxlauncher logo" width="100"/>
-
-# FluxboxLauncher
-
-[![Build Status](https://travis-ci.org/mothsART/fluxboxlauncher.png?branch=master)](https://travis-ci.org/mothsART/fluxboxlauncher)
-[![LICENSE](https://img.shields.io/badge/license-BSD-blue.svg)](LICENSE)
+<div align="center">
+    <img src="./ressources/logo.svg" alt="Fluxboxlauncher logo" width="100"/>
+    <h1>FluxboxLauncher</h1>
+    <p>
+        <a href="https://travis-ci.org/mothsART/fluxboxlauncher" rel="nofollow">
+            <img src="https://camo.githubusercontent.com/9c74f5bdefbed698c50cee9a07474ef105307713/68747470733a2f2f7472617669732d63692e6f72672f6d6f7468734152542f666c7578626f786c61756e636865722e706e673f6272616e63683d6d6173746572" alt="Build Status" data-canonical-src="https://travis-ci.org/mothsART/fluxboxlauncher.png?branch=master" style="max-width:100%;">
+        </a>
+        <a href="/mothsART/fluxboxlauncher/blob/master/LICENSE">
+            <img src="https://camo.githubusercontent.com/6def34e1aa4e2e9e81448c8a57cf3e09d8af28cf/68747470733a2f2f696d672e736869656c64732e696f2f62616467652f6c6963656e73652d4253442d626c75652e737667" alt="LICENSE" data-canonical-src="https://img.shields.io/badge/license-BSD-blue.svg" style="max-width:100%;">
+        </a>
+    </p>
+</div>
 
 ## Introduction
 
