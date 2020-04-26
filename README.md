@@ -1,4 +1,4 @@
-![](./ressources/logo.svg)
+<img src="./ressources/logo.svg" alt="Fluxboxlauncher logo" width="100"/>
 
 # FluxboxLauncher
 
