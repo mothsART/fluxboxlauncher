@@ -5,6 +5,7 @@ from .debug import is_debug_mode
 from .soft import Soft
 from .desktop import get_info
 
+
 class Conf:
     def __init__(self, user):
         """Init fluxboxlauncher config"""

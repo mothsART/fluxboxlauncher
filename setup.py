@@ -16,13 +16,14 @@ setup(
     name='fluxboxlauncher',
     version=__version__,
     description=(
-        'A Gui editor (gtk) to configure applications launching on a fluxbox session'
+        'A Gui editor (gtk) ',
+        'to configure applications launching on a fluxbox session'
     ),
     author='mothsart',
     author_email='ferryjeremie@free.fr',
     url='https://github.com/mothsart/fluxboxlauncher',
-    packages=[ 'flxl', 'flxl.lib' ],
-    data_files= I18NFILES,
+    packages=['flxl', 'flxl.lib'],
+    data_files=I18NFILES,
     entry_points={
         'console_scripts': [
             'fluxboxlauncher = flxl.main:main'

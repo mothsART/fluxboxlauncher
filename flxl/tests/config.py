@@ -245,16 +245,18 @@ class TestConf(TestCase):
         conf = Conf('primtux')
         lines = startup.split('\n')
         lines = [line + '\n' for line in lines]
-        r = conf.load(lines[:-1])
-        has_removed = conf.remove(conf.get_soft('/usr/local/bin/primtux/handymenu-maxi'))
-        assert has_removed == True
+        conf.load(lines[:-1])
+        has_removed = conf.remove(
+            conf.get_soft('/usr/local/bin/primtux/handymenu-maxi')
+        )
+        assert has_removed is True
         assert str(conf) == startup_delete
 
     def test_disable(self):
         conf = Conf('primtux')
         lines = startup.split('\n')
         lines = [line + '\n' for line in lines]
-        r = conf.load(lines[:-1])
+        conf.load(lines[:-1])
         soft = conf.get_soft('rox -p 1')
         conf.disable(soft)
         soft = conf.get_soft('lxpanel')
@@ -265,7 +267,7 @@ class TestConf(TestCase):
         conf = Conf('primtux')
         lines = startup.split('\n')
         lines = [line + '\n' for line in lines]
-        r = conf.load(lines[:-1])
+        conf.load(lines[:-1])
         soft = conf.get_soft('/usr/local/bin/primtux/handymenu-mini')
         conf.enable(soft)
         assert str(conf) == after_enable

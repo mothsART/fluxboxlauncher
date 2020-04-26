@@ -1,5 +1,5 @@
 import gi
-gi.require_version('Gtk', '3.0')
+gi.require_version('Gtk', '3.0')  # noqa: E402
 from gi.repository import Gtk
 
 
@@ -8,8 +8,10 @@ class ConfirmDialog(Gtk.Dialog):
     def __init__(self, parent, title, message):
         Gtk.Dialog.__init__(
             self, title, parent, 0,
-            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-            Gtk.STOCK_OK, Gtk.ResponseType.OK)
+            (
+                Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                Gtk.STOCK_OK, Gtk.ResponseType.OK
+            )
         )
         self.set_default_size(150, 100)
         box = self.get_content_area()
@@ -46,8 +48,10 @@ class CmdLineDialog(Gtk.Dialog):
     def __init__(self, parent, title):
         Gtk.Dialog.__init__(
             self, ' ' + title, parent, 0,
-            (Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
-            Gtk.STOCK_OK, Gtk.ResponseType.OK)
+            (
+                Gtk.STOCK_CANCEL, Gtk.ResponseType.CANCEL,
+                Gtk.STOCK_OK, Gtk.ResponseType.OK
+            )
         )
         self.set_default_size(500, 100)
         box = self.get_content_area()

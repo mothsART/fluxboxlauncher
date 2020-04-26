@@ -1,4 +1,4 @@
-from .i18n import *
+
 
 class Soft:
     name = None
@@ -18,7 +18,7 @@ class Soft:
         self.cmd = cmd
         self.icon = icon
         self.generic = generic
-    
+
     def to_dict(self, inc):
         soft_title = 'soft-%s' % inc
         dic = {

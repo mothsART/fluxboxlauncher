@@ -8,12 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased : 1.0]
 
 - inotify : update fluxboxlaucher config when external config file was edit.
+- coverage
 
 ## [Unreleased : 0.3]
 
 - add a command line editor and test it
 - search name and icon (data in .desktop file) corresponding
 - unit tests on locales and gettext
+- flake8
 
 ## [0.2.3]
 ### Bugfix

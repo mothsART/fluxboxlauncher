@@ -1,11 +1,3 @@
-import os
-from os.path import dirname, join
-import sys
-
-import gi
-gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gdk, GdkPixbuf
-
 from .lib.desktop import get_info
 from .lib.soft import Soft
 from .lib.dialog import ConfirmDialog, WarningDialog, CmdLineDialog
@@ -16,6 +8,14 @@ from .lib.i18n import (
     _drag, _search, _activate,
     _add_cmd_line
 )
+
+import os
+import sys
+
+import gi
+from gi.repository import Gtk, Gdk, GdkPixbuf
+gi.require_version('Gtk', '3.0')
+
 
 def gtk_style():
     css = b"""
@@ -88,7 +88,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
         )
         img = Gtk.Image(margin=5)
         if (
-            soft.icon != None
+            soft.icon is not None
             and os.path.isfile(soft.icon)
             and (
                 soft.icon.endswith('.png')
@@ -102,7 +102,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
                 GdkPixbuf.InterpType.BILINEAR
             )
             img.set_from_pixbuf(scaled_buf)
-        elif soft.icon != None:
+        elif soft.icon is not None:
             img.set_from_icon_name(soft.icon, self.ICONSIZE)
             img.set_pixel_size(self.ICONSIZE)
 
@@ -161,11 +161,6 @@ class FluxBoxLauncherWindow(Gtk.Window):
         if response != Gtk.ResponseType.OK:
             return
         app_info = dialog.get_app_info()
-
-        name = app_info.get_display_name()
-        generic = app_info.get_generic_name()
-        description = app_info.get_description()
-
         soft = Soft(*get_info(app_info.get_filename()))
         if conf.soft_exist(soft):
             dialog.destroy()
@@ -216,7 +211,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
             print('DEBUG MODE')
         Gtk.Window.__init__(
             self,
-            title = 'Fluxbox Launcher'
+            title='Fluxbox Launcher'
         )
         conf.open()
         conf.save()
@@ -228,18 +223,18 @@ class FluxBoxLauncherWindow(Gtk.Window):
         label = Gtk.Label(_activate, margin=5)
         hbox_header = Gtk.HBox(homogeneous=False)
         hbox_header.pack_end(label, False, False, False)
-        
+
         TARGET_TYPE_URI_LIST = 80
-        dnd_list = [ 
+        dnd_list = [
             Gtk.TargetEntry.new(
-                'text/uri-list', 0, TARGET_TYPE_URI_LIST 
+                'text/uri-list', 0, TARGET_TYPE_URI_LIST
             )
         ]
         h = Gtk.HBox(homogeneous=False)
         h.set_name('drag-zone')
         h.drag_dest_set(
             Gtk.DestDefaults.ALL,
-            dnd_list, 
+            dnd_list,
             Gdk.DragAction.COPY
         )
         h.set_property("height-request", 200)
@@ -253,7 +248,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
 
         # add a shell cmd
         cmd_btn = Gtk.Button(
-            label = ' ' + _add_cmd_line,
+            label=' ' + _add_cmd_line,
             margin=10
         )
         cmd_btn.connect(
@@ -268,7 +263,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
 
         # search button
         appfinderbtn = Gtk.Button(
-            label = ' ' + _search,
+            label=' ' + _search,
             margin=10
         )
         addi = Gtk.Image()
@@ -284,10 +279,10 @@ class FluxBoxLauncherWindow(Gtk.Window):
 
         # drag and drop widget
         drag_vbox = Gtk.VBox(homogeneous=False)
-        l = Gtk.Label(_drag)
-        drag_vbox.pack_start(l, True, True, 10)
+        label = Gtk.Label(_drag)
+        drag_vbox.pack_start(label, True, True, 10)
         appfinderbtn.show()
-        l.show()
+        label.show()
         h.pack_start(drag_vbox, True, True, False)
         vbox.pack_start(h, True, True, False)
 
