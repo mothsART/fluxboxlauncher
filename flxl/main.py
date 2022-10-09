@@ -2,6 +2,8 @@ import os
 import sys
 
 import gi
+gi.require_version('Gdk', '3.0')  # noqa E402
+gi.require_version('Gtk', '3.0')  # noqa E402
 from gi.repository import Gdk, GdkPixbuf, Gtk
 
 from .lib.config import Conf
@@ -13,8 +15,6 @@ from .lib.i18n import (
     _drag, _duplicate, _search
 )
 from .lib.soft import Soft
-
-gi.require_version('Gtk', '3.0')
 
 
 def gtk_style():

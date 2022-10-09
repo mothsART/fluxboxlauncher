@@ -1,9 +1,11 @@
-import sys
 from os.path import dirname, isdir, join
+from sys import modules
 
 
 def is_debug_mode():
-    d = dirname(sys.modules['flxl'].__file__)
-    if isdir(join(d, '..', '.git')):
+    if (
+        isdir(join(dirname(modules['flxl'].__file__), '..', '.git'))
+        and isdir('flxl')
+    ):
         return True
     return False

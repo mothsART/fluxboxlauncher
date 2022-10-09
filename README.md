@@ -63,7 +63,7 @@ python3 -m unittest flxl/tests/tests.py
 ```sh
 git clone https://github.com/mothsART/fluxboxlauncher.git
 cd fluxboxlauncher
-dpkg-buildpackage -us -uc
+debuild -us -uc
 ```
 
 and launch with :
