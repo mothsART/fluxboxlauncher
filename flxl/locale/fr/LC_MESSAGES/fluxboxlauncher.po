@@ -33,11 +33,11 @@ msgstr "Cette application existe déjà"
 
 #: ./fluxboxlauncher.py:299
 msgid "Drag an application here to create a launcher"
-msgstr "Glissez ici une application"
+msgstr "Glisser ici une application"
 
 #: ./fluxboxlauncher.py:302
 msgid "Search an application"
-msgstr "Recherchez une application"
+msgstr "Rechercher une application"
 
 msgid "activate ?"
 msgstr "activé ?"

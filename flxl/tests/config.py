@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from flxl.lib.config import Conf
+from flxl.lib.config import UserConf
 from flxl.lib.soft import Soft
 
 startup = """#!/bin/sh
@@ -226,14 +226,14 @@ exec fluxbox
 
 class TestConf(TestCase):
     def test_load(self):
-        conf = Conf('primtux')
+        conf = UserConf('primtux')
         lines = startup.split('\n')
         lines = [line + '\n' for line in lines]
         conf.load(lines[:-1])
         assert str(conf) == startup
 
     def test_add(self):
-        conf = Conf('primtux')
+        conf = UserConf('primtux')
         lines = startup.split('\n')
         lines = [line + '\n' for line in lines]
         conf.load(lines[:-1])
@@ -242,7 +242,7 @@ class TestConf(TestCase):
         assert str(conf) == startup_add
 
     def test_remove(self):
-        conf = Conf('primtux')
+        conf = UserConf('primtux')
         lines = startup.split('\n')
         lines = [line + '\n' for line in lines]
         r = conf.load(lines[:-1])
@@ -251,7 +251,7 @@ class TestConf(TestCase):
         assert str(conf) == startup_delete
 
     def test_disable(self):
-        conf = Conf('primtux')
+        conf = UserConf('primtux')
         lines = startup.split('\n')
         lines = [line + '\n' for line in lines]
         r = conf.load(lines[:-1])
@@ -262,7 +262,7 @@ class TestConf(TestCase):
         assert str(conf) == after_disable
 
     def test_enable(self):
-        conf = Conf('primtux')
+        conf = UserConf('primtux')
         lines = startup.split('\n')
         lines = [line + '\n' for line in lines]
         r = conf.load(lines[:-1])

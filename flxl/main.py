@@ -1,15 +1,17 @@
 import os
-from os.path import dirname, join
-import sys
+from os.path import join
 
 import gi
-gi.require_version('Gtk', '3.0')
+gi.require_version('Gdk', '3.0')  # noqa E402
+gi.require_version('Gtk', '3.0')  # noqa E402
 from gi.repository import Gtk, Gdk, GdkPixbuf
 
+from .lib.style import gtk_style
+from .lib.utils import new_img
 from .lib.desktop import get_info
 from .lib.soft import Soft
 from .lib.dialog import ConfirmDialog, WarningDialog, CmdLineDialog
-from .lib.config import Conf
+from .lib.config import Conf, UserConf
 from .lib.i18n import (
     _duplicate, _app_already_exists,
     _confirmation, _confirm_question,
@@ -17,32 +19,10 @@ from .lib.i18n import (
     _add_cmd_line
 )
 
-def gtk_style():
-    css = b"""
-#drag-zone {
-    background-color: white;
-    border: dashed red 1px;
-    margin: 20px;
-}
-
-#apps {
-    border-bottom: solid grey 1px;
-}
-    """
-    style_provider = Gtk.CssProvider()
-    style_provider.load_from_data(css)
-
-    Gtk.StyleContext.add_provider_for_screen(
-        Gdk.Screen.get_default(),
-        style_provider,
-        Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
-    )
-
-
 class FluxBoxLauncherWindow(Gtk.Window):
     ICONSIZE = 32
 
-    def del_soft(self, conf, soft, hbox, vbox, hbox_header=None):
+    def del_soft(self, user_conf, soft, hbox, vbox, hbox_header=None):
         confirm = ConfirmDialog(
             self,
             _confirmation,
@@ -53,23 +33,23 @@ class FluxBoxLauncherWindow(Gtk.Window):
             confirm.destroy()
             return
         confirm.destroy()
-        conf.remove(soft)
-        conf.save()
+        user_conf.remove(soft)
+        user_conf.save()
         vbox.remove(hbox)
-        if hbox_header and not conf.softs:
+        if hbox_header and not user_conf.softs:
             vbox.remove(hbox_header)
 
-    def on_checked(self, widget, soft, conf):
+    def on_checked(self, widget, soft, user_conf):
         if widget.get_active():
             soft.disabled = False
-            conf.enable(soft)
+            user_conf.enable(soft)
         else:
             soft.disabled = True
-            conf.disable(soft)
-        conf.save()
+            user_conf.disable(soft)
+        user_conf.save()
 
-    def _add_soft(self, conf, soft, vbox, hbox_header=None):
-        if hbox_header and conf.softs:
+    def _add_soft(self, user_conf, soft, vbox, hbox_header=None):
+        if hbox_header and user_conf.softs:
             vbox.remove(hbox_header)
         hbox = Gtk.HBox(homogeneous=False, margin=5)
 
@@ -78,9 +58,9 @@ class FluxBoxLauncherWindow(Gtk.Window):
         deli.set_from_stock(Gtk.STOCK_DELETE, Gtk.IconSize.MENU)
         delbtn.set_image(deli)
         delbtn.connect_object(
-            "clicked",
+            'clicked',
             self.del_soft,
-            conf,
+            user_conf,
             soft,
             hbox,
             vbox,
@@ -110,10 +90,10 @@ class FluxBoxLauncherWindow(Gtk.Window):
         activateButton = Gtk.CheckButton(margin=5)
         activateButton.set_active(not soft.disabled)
         activateButton.connect(
-            "toggled",
+            'toggled',
             self.on_checked,
             soft,
-            conf
+            user_conf
         )
         hbox.pack_start(delbtn, False, False, False)
         hbox.pack_start(img, False, False, False)
@@ -127,14 +107,14 @@ class FluxBoxLauncherWindow(Gtk.Window):
     def on_drag_data_received(
         self, widget, context, x, y,
         selection, target_type, timestamp,
-        conf, vbox, hbox_header
+        user_conf, vbox, hbox_header
     ):
         data = selection.get_data().strip().replace(b'%20', b' ')
-        f = data.replace(b"file://", b"").strip()
+        f = data.replace(b'file://', b'').strip()
         if not os.path.isfile(f):
             return
         soft = Soft(*get_info(f))
-        if conf.soft_exist(soft):
+        if user_conf.soft_exist(soft):
             confirmWarning = WarningDialog(
                 self,
                 _duplicate,
@@ -143,22 +123,23 @@ class FluxBoxLauncherWindow(Gtk.Window):
             confirmWarning.run()
             confirmWarning.destroy()
             return
-        self._add_soft(conf, soft, vbox, hbox_header)
+        self._add_soft(user_conf, soft, vbox, hbox_header)
         vbox.show_all()
-        conf.add(soft)
-        conf.save()
+        user_conf.add(soft)
+        user_conf.save()
 
-    def appfinder(self, widget, event, conf, vbox, hbox_header):
+    def appfinder(self, widget, event, user_conf, vbox, hbox_header):
         dialog = Gtk.AppChooserDialog(
             parent=self,
-            content_type="image/png"
+            content_type='image/png'
         )
         dialog.set_heading(_search)
-        dialog.connect("response", self.on_response, conf, vbox, hbox_header)
+        dialog.connect('response', self.on_response, user_conf, vbox, hbox_header)
         dialog.run()
 
-    def on_response(self, dialog, response, conf, vbox, hbox_header):
+    def on_response(self, dialog, response, user_conf, vbox, hbox_header):
         if response != Gtk.ResponseType.OK:
+            dialog.destroy()
             return
         app_info = dialog.get_app_info()
 
@@ -167,7 +148,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
         description = app_info.get_description()
 
         soft = Soft(*get_info(app_info.get_filename()))
-        if conf.soft_exist(soft):
+        if user_conf.soft_exist(soft):
             dialog.destroy()
             confirmWarning = WarningDialog(
                 self,
@@ -177,13 +158,13 @@ class FluxBoxLauncherWindow(Gtk.Window):
             confirmWarning.run()
             confirmWarning.destroy()
             return
-        self._add_soft(conf, soft, vbox, hbox_header)
+        self._add_soft(user_conf, soft, vbox, hbox_header)
         vbox.show_all()
-        conf.add(soft)
-        conf.save()
+        user_conf.add(soft)
+        user_conf.save()
         dialog.destroy()
-
-    def add_cmd(self, widget, event, conf, vbox, hbox_header):
+        
+    def add_cmd(self, widget, event, user_conf, vbox, hbox_header):
         confirm = CmdLineDialog(
             self,
             _add_cmd_line
@@ -194,7 +175,7 @@ class FluxBoxLauncherWindow(Gtk.Window):
             return
         cmd = confirm.entry.get_text().strip()
         soft = Soft(cmd, cmd)
-        if conf.soft_exist(soft):
+        if user_conf.soft_exist(soft):
             confirmWarning = WarningDialog(
                 self,
                 _duplicate,
@@ -208,20 +189,23 @@ class FluxBoxLauncherWindow(Gtk.Window):
         confirm.destroy()
         self._add_soft(conf, soft, vbox, hbox_header)
         vbox.show_all()
-        conf.add(soft)
-        conf.save()
+        user_conf.add(soft)
+        user_conf.save()
 
-    def __init__(self, conf):
-        if conf.DEBUG:
-            print('DEBUG MODE')
-        Gtk.Window.__init__(
-            self,
-            title = 'Fluxbox Launcher : session %s' % conf.user
-        )
-        conf.open()
-        conf.save()
+    def _create_tab(self, user, debug):
+        user_conf = UserConf(user, debug)
+        user_conf.open()
+        user_conf.save()
 
-        self.set_border_width(5)
+        label = Gtk.Label(f'session : {user}')
+        hbox = Gtk.HBox()
+        img = new_img(user_conf.icon_path)
+        if img:
+            img_context = img.get_style_context()
+            img_context.add_class('icon')
+            hbox.pack_start(img, False, True, 0)
+        hbox.pack_end(label, True, True, 0)
+        hbox.show_all()
 
         vbox = Gtk.VBox(homogeneous=False)
 
@@ -242,11 +226,11 @@ class FluxBoxLauncherWindow(Gtk.Window):
             dnd_list, 
             Gdk.DragAction.COPY
         )
-        h.set_property("height-request", 200)
+        h.set_property('height-request', 200)
         h.connect(
-            "drag-data-received",
+            'drag-data-received',
             self.on_drag_data_received,
-            conf, vbox, hbox_header
+            user_conf, vbox, hbox_header
         )
 
         horizontal_header = Gtk.HBox(homogeneous=False)
@@ -257,9 +241,9 @@ class FluxBoxLauncherWindow(Gtk.Window):
             margin=10
         )
         cmd_btn.connect(
-            "button_press_event",
+            'button_press_event',
             self.add_cmd,
-            conf, vbox, hbox_header
+            user_conf, vbox, hbox_header
         )
         addi = Gtk.Image()
         addi.set_from_stock(Gtk.STOCK_ADD, Gtk.IconSize.MENU)
@@ -275,9 +259,9 @@ class FluxBoxLauncherWindow(Gtk.Window):
         addi.set_from_stock(Gtk.STOCK_FIND, Gtk.IconSize.MENU)
         appfinderbtn.set_image(addi)
         appfinderbtn.connect(
-            "button_press_event",
+            'button_press_event',
             self.appfinder,
-            conf, vbox, hbox_header
+            user_conf, vbox, hbox_header
         )
         horizontal_header.pack_start(appfinderbtn, True, True, False)
         vbox.pack_start(horizontal_header, True, True, False)
@@ -291,27 +275,42 @@ class FluxBoxLauncherWindow(Gtk.Window):
         h.pack_start(drag_vbox, True, True, False)
         vbox.pack_start(h, True, True, False)
 
-        for soft in conf.softs:
-            self._add_soft(conf, soft, vbox)
+        for soft in user_conf.softs:
+            self._add_soft(user_conf, soft, vbox)
 
         # activate header
-        if conf.softs:
+        if user_conf.softs:
             vbox.pack_end(hbox_header, False, False, False)
 
         swin = Gtk.ScrolledWindow()
         swin.add_with_viewport(vbox)
-        self.add(swin)
+        
+        return swin, hbox
+
+    def __init__(self, conf):
+        if conf.DEBUG:
+            print('DEBUG MODE')
+        Gtk.Window.__init__(
+            self,
+            title = 'Fluxbox Launcher'
+        )
+        self.set_border_width(5)
+        notebook = Gtk.Notebook()
+        notebook.set_tab_pos(Gtk.PositionType.TOP)
+
+        for user in conf.users:
+            swin, hbox = self._create_tab(user, conf.DEBUG)
+            notebook.append_page(swin, hbox)
+
+        self.add(notebook)
         self.set_default_size(800, 600)
         self.show_all()
 
 
 def main():
-    user = None
-    if len(sys.argv) > 1:
-        user = sys.argv[1]
     gtk_style()
-    win = FluxBoxLauncherWindow(Conf(user))
-    win.connect("destroy", Gtk.main_quit)
+    win = FluxBoxLauncherWindow(Conf())
+    win.connect('destroy', Gtk.main_quit)
     win.show_all()
     Gtk.main()
     exit(0)

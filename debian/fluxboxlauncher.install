@@ -1,20 +1,12 @@
 fluxboxlauncher                                usr/bin
-fluxboxlauncher_mini                           usr/bin
-fluxboxlauncher_super                          usr/bin
-fluxboxlauncher_maxi                           usr/bin
 
-fluxboxlauncher.py                             usr/lib/python3/dist-packages/fluxboxlauncher
 flxl/*.py                                      usr/lib/python3/dist-packages/flxl
 flxl/lib/*.py                                  usr/lib/python3/dist-packages/flxl/lib
 
-debian/fluxboxlauncher.svg                     usr/share/icons/hicolor/scalable/apps
-debian/fluxboxlauncher_mini.svg                usr/share/icons/hicolor/scalable/apps
-debian/fluxboxlauncher_maxi.svg                usr/share/icons/hicolor/scalable/apps
-debian/fluxboxlauncher_super.svg               usr/share/icons/hicolor/scalable/apps
+fluxboxlauncher.svg                            usr/share/icons/hicolor/scalable/apps
+
+ressources/*.svg                               usr/share/fluxboxlauncher/icons/default
 
 flxl/locale/fr/LC_MESSAGES/fluxboxlauncher.mo  usr/share/locale/fr/LC_MESSAGES
 
 fluxboxlauncher.desktop                        usr/share/applications
-debian/fluxboxlauncher_mini.desktop            usr/share/applications
-debian/fluxboxlauncher_maxi.desktop            usr/share/applications
-debian/fluxboxlauncher_super.desktop           usr/share/applications

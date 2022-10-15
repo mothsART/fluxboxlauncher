@@ -7,14 +7,14 @@ def get_info(desktopfile, lang=None):
     """return infos from a .desktop file"""
     if not lang:
         lang = global_lang
-    name, cmd, icon, generic= "", "", "", ""
+    name, cmd, icon, generic= '', '', '', ''
     nameloc = False
     geneloc = False
 
     with open(desktopfile, 'r') as d:
         df = d.readlines()
     for l in df:
-        if generic == "" or geneloc == False:
+        if generic == '' or geneloc == False:
             if l.startswith('GenericName[{0}]='.format(lang)):
                 generic = l.replace(
                     'GenericName[{0}]='.format(lang),''

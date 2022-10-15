@@ -5,10 +5,10 @@ Icon=fluxboxlauncher
 Terminal=false
 Type=Application
 Categories=Misc;
-Keywords=fluxbox;start;init;app;admin;teach;session;
-Name=FluxboxLauncher : Teacher session
-Comment=Manage application startup when FluxBox is launched at Teacher session : FluxBoxlauncher is a graphical application with drag-and-drop functionality.
+Keywords=fluxbox;start;init;app;admin;session;
+Name=FluxboxLauncher
+Comment=Manage application startup when FluxBox for session "mini", "super", "maxi" and "prof" : FluxBoxlauncher is a graphical application with drag-and-drop functionality.
 
 Keywords[fr]=fluxbox;start;lancement;init;app;admin;prof;session;
-Name[fr]=FluxboxLauncher : session Prof
-Comment[fr]=Gérez le démarrage d'applications au lancement de FluxBox session Prof : FluxBoxLauncher est une interface graphique avec des fonctionnalités de glissé/déposé.
+Name[fr]=FluxboxLauncher
+Comment[fr]=Gérez le démarrage d'applications pour les sessions "mini", "super", "maxi" et "prof". FluxBoxLauncher est une interface graphique avec des fonctionnalités de glissé/déposé.

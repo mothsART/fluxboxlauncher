@@ -7,7 +7,10 @@ result
 .zcache
 
 debian/files
-debian/*
+debian/fluxboxlauncher
+debian/tmp
 debian/debhelper-build-stamp
 debian/*.debhelper
 debian/*.substvars
+
+.pybuild

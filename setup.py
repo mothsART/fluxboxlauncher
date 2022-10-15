@@ -3,6 +3,7 @@
 import os
 import glob
 from setuptools import setup
+from flxl import __version__
 
 I18NFILES = []
 for filepath in glob.glob("flxl/locale/*/LC_MESSAGES/*.mo"):
@@ -12,7 +13,7 @@ for filepath in glob.glob("flxl/locale/*/LC_MESSAGES/*.mo"):
 
 setup(
     name='fluxboxlauncher',
-    version=0.1,
+    version=__version__,
     description=(
         '...'
     ),

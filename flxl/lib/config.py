@@ -4,23 +4,43 @@ from os.path import join, exists
 from .soft import Soft
 from .desktop import get_info
 
+def up_dir(d, n):
+    """Given path d, go up n dirs from d and return that path"""
+    ret_val = d
+    for _ in range(n):
+        ret_val = os.path.dirname(ret_val)
+    return ret_val
+
+
 class Conf:
-    def __init__(self, user):
+    def __init__(self):
         """Init fluxboxlauncher config"""
+        self.DEBUG = False
+        if os.path.isdir('.git'):
+            self.DEBUG = True
+        self.users = [ 'prof', 'mini', 'super', 'maxi']
+
+
+class UserConf:
+    def __init__(self, user_name='prof', debug=False):
+        '''Init user config'''
         self.first_lines = []
         self.softs = []
         self.last_lines = []
-        self.DEBUG = False
+        self.debug = debug
+
         self.start_path = 'startup'
-        if os.path.isdir('.git'):
-            self.DEBUG = True
-        if not user:
-            user = 'prof'
-        self.user = user.replace('01-', '') \
+        self.user = user_name.replace('01-', '') \
             .replace('02-', '') \
             .replace('03-', '') \
             .capitalize()
-        dirname = "/home/%s/.fluxbox/" % user
+        self.icon_path = join(
+            up_dir(__file__, 6),
+            f'share/fluxboxlauncher/icons/default/fluxboxlauncher_{user_name}.svg'
+        )
+        if debug:
+            self.icon_path = f'ressources/fluxboxlauncher_{user_name}.svg'
+        dirname = "/home/%s/.fluxbox/" % user_name
         if not os.path.isdir(dirname):
             return
         self.start_path = dirname + 'startup'

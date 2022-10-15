@@ -3,7 +3,7 @@ from unittest.mock import patch, mock_open
 
 from flxl.lib.desktop import get_info
 
-desktop_stream = """"[Desktop Entry]
+desktop_stream = '''[Desktop Entry]
 Version=1.0
 Name=MagicolorGrid
 Comment=Create a magic color grid
@@ -14,7 +14,7 @@ Type=Application
 Categories=Graphics;Illustration;
 Keywords=svg;interactive;education;
 Name[fr_FR]=MagicolorGrid en français
-"""
+'''
 
 
 class TestDesktop(TestCase):
